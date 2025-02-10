@@ -1,0 +1,52 @@
+{
+  "jdk": {
+    "version": "17"
+  },
+  "tomcat": {
+    "version": "9.0.97",
+	"path": "latest",
+	"service_name": "tomcat9",
+	"xmx": "4096",
+	"xms": "2048",
+	"username": "admin",
+	"password": "password"
+  },
+  "monitoring": {
+	  "glowroot": {
+		  "version": "0.14.2",
+		  "username": "admin",
+		  "password": "password"
+	  },
+	  "prometheus-grafana": {
+		  "prometheus_version": "",
+		  "grafana_version": "",
+		  "windows_exporter_version": ""
+	  }
+  },
+  "postgresql": {
+    "version": "16",
+	"host": "localhost",
+	"username": "postgres",
+	"password": "postgres",
+	"service_name": "postgres16",
+	"max_connections": "80",
+	"memory": "10",
+	"cpus": "3",
+	"port": "5432"
+	"postgis_version": "3.5.2"
+  },
+  "dhis2": {
+    "version": "40",
+	"home": "C:\\dhis2-home",
+	"path": "ROOT",
+	"db_name": "dhis2",
+	"db_username": "dhis",
+	"db_password": "dhis"
+  },
+  "proxy": {
+	  "name": "nginx",
+	  "service_name": "nginx",
+	  "version": "1.26.2",
+	  "hostname": "guinea3.solidlines.io"
+  }
+}
