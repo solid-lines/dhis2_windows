@@ -288,31 +288,32 @@ if ($service) {
 
 # Download Tomcat and Glowroot
 Download-Tomcat
-Download-Glowroot
+if ($glowroot_enabled -eq "Y") {
+	Download-Glowroot
+}
 
 # Install Tomcat and Glowroot
 Install-Tomcat
-Install-Glowroot
-
-# If tomcat service already exists, start service, if not, create a new service
-if ($service) {
-	# Start Tomcat service
-	Start-Service -Name $tomcat_service_name
-	Write-Host "Started service ${tomcat_service_name}"
-} else {
-	# Create Tomcat service
-	Write-Host "Creating Tomcat service '${tomcat_service_name}'"
-	$current_path = Get-Location
-	Set-Location ${tomcat_install_path}\bin
-	cmd.exe /c "service.bat install ${tomcat_service_name}"
-	cmd.exe /c "tomcat9.exe //US//tomcat9 --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:${tomcat_base_dir}\glowroot\glowroot.jar`" --Startup=auto"
-	#& ".\service.bat install ${tomcat_service_name}"
-	#& ".\tomcat9.exe //US//tomcat9 --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:${tomcat_base_dir}\glowroot\glowroot.jar`" --Startup=auto"
-	Set-Location $current_path
-	
-	# Start Tomcat service
-	Start-Service -Name $tomcat_service_name
-	Write-Host "Started service ${tomcat_service_name}"
+if ($glowroot_enabled -eq "Y") {
+	Install-Glowroot
 }
+
+$current_path = Get-Location
+Set-Location ${tomcat_install_path}\bin
+if (-Not ($service)) {
+	# Create Tomcat service if not exists
+	Write-Host "Creating Tomcat service '${tomcat_service_name}'"
+	cmd.exe /c "service.bat install ${tomcat_service_name}"
+}
+if ($glowroot_enabled -eq "Y") {
+	cmd.exe /c "tomcat9.exe //US//tomcat9 --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:${tomcat_base_dir}\glowroot\glowroot.jar`" --Startup=auto"
+} else {
+	cmd.exe /c "tomcat9.exe //US//tomcat9 --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} --Startup=auto"
+}
+Set-Location $current_path
+
+# Start Tomcat service
+Start-Service -Name $tomcat_service_name
+Write-Host "Started service ${tomcat_service_name}"
 
 Write-Host "Tomcat v${tomcat_version} and Glowroot v${glowroot_version} installed and configured successfully."

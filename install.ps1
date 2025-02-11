@@ -121,7 +121,9 @@ try {
 
 # Install Prometheus and Grafana
 try {
-    .\install_Prometheus.ps1 -tomcat_path $tomcat_path -prometheus_version $prometheus_version -grafana_version $grafana_version -windows_exporter_version $windows_exporter_version
+    if ($prometheus_grafana_enabled -eq "Y") {
+		.\install_Prometheus.ps1 -tomcat_path $tomcat_path -prometheus_version $prometheus_version -grafana_version $grafana_version -windows_exporter_version $windows_exporter_version
+	}
 } catch {
     Write-Error "Prometheus and Grafana installation failed: $_"
 }
