@@ -39,7 +39,7 @@ try {
 
 $jdk_version = $config.jdk.version
 $tomcat_version = $config.tomcat.version
-$tomcat_path = $config.tomcat.tomcat_path
+$tomcat_path = $config.tomcat.path
 $tomcat_service_name = $config.tomcat.service_name
 $tomcat_xmx = $config.tomcat.xmx
 $tomcat_xms = $config.tomcat.xms
