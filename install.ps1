@@ -31,10 +31,15 @@ Write-Host "Init DHIS2 installation...."
 Write-Host "Loading config settings"
 
 # Load config.json and get variables
-$config = Get-Content -Raw -Path ".\config.json" | ConvertFrom-Json
+try {
+	$config = Get-Content -Raw -Path ".\config.json" | ConvertFrom-Json
+} catch {
+    Write-Error "Config file: config.json has errors. Please review it!  $_"
+}
 
 $jdk_version = $config.jdk.version
 $tomcat_version = $config.tomcat.version
+$tomcat_path = $config.tomcat.tomcat_path
 $tomcat_service_name = $config.tomcat.service_name
 $tomcat_xmx = $config.tomcat.xmx
 $tomcat_xms = $config.tomcat.xms
@@ -68,6 +73,7 @@ $proxy_version = $config.proxy.version
 $proxy_hostname = $config.proxy.hostname
 $proxy_service_name = $config.proxy.service_name
 
+# REVIEW URLS previamente
 
 # If hostname is not localhost, create firewall rules to open ports 80 and 443
 if (${proxy_hostname} -ne "localhost") {
@@ -87,7 +93,7 @@ try {
 
 # Install Tomcat and Glowroot
 try {
-    .\install_Tomcat.ps1 -tomcat_version $tomcat_version -tomcat_service_name $tomcat_service_name -tomcat_xmx $tomcat_xmx -tomcat_xms $tomcat_xms -tomcat_username $tomcat_username -tomcat_password $tomcat_password -glowroot_version $glowroot_version -glowroot_username $glowroot_username -glowroot_password $glowroot_password
+    .\install_Tomcat.ps1 -tomcat_version $tomcat_version -tomcat_service_name $tomcat_service_name -tomcat_path $tomcat_path -tomcat_xmx $tomcat_xmx -tomcat_xms $tomcat_xms -tomcat_username $tomcat_username -tomcat_password $tomcat_password -glowroot_enabled $glowroot_enabled -glowroot_version $glowroot_version -glowroot_username $glowroot_username -glowroot_password $glowroot_password
 } catch {
     Write-Error "Tomcat $tomcat_version installation failed: $_"
 }
@@ -111,4 +117,11 @@ try {
     .\install_Nginx.ps1 -proxy_hostname $proxy_hostname -proxy_version $proxy_version -proxy_service_name $proxy_service_name
 } catch {
     Write-Error "Nginx installation failed: $_"
+}
+
+# Install Prometheus and Grafana
+try {
+    .\install_Prometheus.ps1 -tomcat_path $tomcat_path -prometheus_version $prometheus_version -grafana_version $grafana_version -windows_exporter_version $windows_exporter_version
+} catch {
+    Write-Error "Prometheus and Grafana installation failed: $_"
 }

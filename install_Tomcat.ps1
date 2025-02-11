@@ -80,7 +80,7 @@ function Install-Tomcat {
 		New-Item -ItemType Directory -Path $tomcat_base_dir | Out-Null
 	}
 	Expand-Archive -Path $tomcat_download_file -DestinationPath $tomcat_base_dir -Force
-	$tomcat_install_old_path = "${tomcat_base_dir}/apache-tomcat-${tomcat_version}"
+	$tomcat_install_old_path = "${tomcat_base_dir}\apache-tomcat-${tomcat_version}"
 	
 	# If tomcat destination path exists, remove it. Rename Tomcat installation path to new path
 	if (Test-Path $tomcat_install_path) {
@@ -267,6 +267,7 @@ function Install-Glowroot {
 "@
 }
 
+
 #######################
 # Script
 #######################
@@ -293,6 +294,7 @@ Download-Glowroot
 Install-Tomcat
 Install-Glowroot
 
+# If tomcat service already exists, start service, if not, create a new service
 if ($service) {
 	# Start Tomcat service
 	Start-Service -Name $tomcat_service_name
@@ -301,11 +303,11 @@ if ($service) {
 	# Create Tomcat service
 	Write-Host "Creating Tomcat service '${tomcat_service_name}'"
 	$current_path = Get-Location
-	Set-Location ${tomcat_install_path}\apache-tomcat-${tomcat_version}\bin
+	Set-Location ${tomcat_install_path}\bin
 	cmd.exe /c "service.bat install ${tomcat_service_name}"
-	cmd.exe /c "tomcat9.exe //US//tomcat9 --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:${tomcat_install_path}\glowroot\glowroot.jar`" --Startup=auto"
+	cmd.exe /c "tomcat9.exe //US//tomcat9 --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:${tomcat_base_dir}\glowroot\glowroot.jar`" --Startup=auto"
 	#& ".\service.bat install ${tomcat_service_name}"
-	#& ".\tomcat9.exe //US//tomcat9 --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:${tomcat_install_path}\glowroot\glowroot.jar`" --Startup=auto"
+	#& ".\tomcat9.exe //US//tomcat9 --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:${tomcat_base_dir}\glowroot\glowroot.jar`" --Startup=auto"
 	Set-Location $current_path
 	
 	# Start Tomcat service
