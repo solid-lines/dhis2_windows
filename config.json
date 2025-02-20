@@ -9,14 +9,14 @@
 	"xmx": "4096",
 	"xms": "2048",
 	"username": "admin",
-	"password": "password"
+	"password": "XXXXX"
   },
   "monitoring": {
     "glowroot": {
       "enabled": "Y",
       "version": "0.14.2",
       "username": "admin",
-      "password": "password"
+      "password": "XXXXX"
     },
     "prometheus_grafana": {
       "enabled": "Y",
@@ -42,7 +42,7 @@
 	"path": "ROOT",
 	"db_name": "dhis2",
 	"db_username": "dhis",
-	"db_password": "dhis"
+	"db_password": "XXXXX"
   },
   "proxy": {
 	  "name": "nginx",
