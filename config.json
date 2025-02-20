@@ -3,7 +3,7 @@
     "version": "17"
   },
   "tomcat": {
-    "version": "9.0.97",
+    "version": "9.0.100",
 	"path": "latest",
 	"service_name": "Tomcat",
 	"xmx": "4096",
@@ -21,7 +21,7 @@
     "prometheus_grafana": {
       "enabled": "Y",
       "prometheus_version": "3.2.0",
-      "grafana_version": "11.5.1"
+      "grafana_version": "11.5.2"
     }
   },
   "postgresql": {
@@ -47,7 +47,7 @@
   "proxy": {
 	  "name": "nginx",
 	  "service_name": "Nginx",
-	  "version": "1.26.2",
+	  "version": "1.26.3",
 	  "hostname": "dhis2-windows.solidlines.io"
   }
 }
