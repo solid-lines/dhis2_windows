@@ -6,7 +6,7 @@ param (
 	[string]$grafana_version,
 	[string]$pg_username,
 	[string]$pg_password,
-	[script]$dhis2_db_name,
+	[string]$dhis2_db_name,
 	[string]$proxy_hostname,
 	[string]$proxy_version
 )
@@ -37,8 +37,8 @@ function Install-postgres_exporter {
 	$current_path = Get-Location
 	Set-Location "C:\Program Files\nssm-2.24\win64\"
 	cmd.exe /c ".\nssm.exe install ${pgExporterServiceName} `"${pgExporterFile}`""
-	cmd.exe /c ".\nssm.exe set AppParameters `"--auto-discover-databases --exclude-databases=`"template0,template1,postgres`" --collector.long_running_transactions --collector.stat_statements`""
-	cmd.exe /c ".\nssm.exe set postgres_exporter Environment `"DATA_SOURCE_NAME=postgresql://${pg_username}:${pg_password}@localhost:5432/${dhis2_db_name}?sslmode=disable`""
+	cmd.exe /c ".\nssm.exe set ${pgExporterServiceName} AppParameters `"--auto-discover-databases --exclude-databases='template0,template1,postgres' --collector.long_running_transactions --collector.stat_statements`""
+	cmd.exe /c ".\nssm.exe set ${pgExporterServiceName} AppEnvironmentExtra `"DATA_SOURCE_NAME=postgresql://${pg_username}:${pg_password}@localhost:5432/${dhis2_db_name}?sslmode=disable`""
 	Set-Location $current_path
 
 	# Start postgres_exporter service
@@ -52,7 +52,7 @@ function Install-windows_exporter {
 	Write-Host "Installing windows_exporter v0.30.4"
 	$windowsExporterZipFile = ".\Prometheus\windows_exporter\windows_exporter-0.30.4.zip"
 	$windowsExporterInstallPath = "${prometheus_base_install_path}\windows_exporter"
-	$windowsExporterFile = "${pgExporterInstallPath}\windows_exporter.exe"
+	$windowsExporterFile = "${windowsExporterInstallPath}\windows_exporter.exe"
 	$windowsExporterServiceName = "windows_exporter"
 
 	# Create install path if it does not exist
@@ -105,7 +105,7 @@ function Install-nginx-prometheus-exporter {
 	Write-Host "nginx-prometheus-exporter installed and running  http://localhost:9113/metrics"
 }
 
-# Install nginx-log-exporter
+# Install nginx-log-exporter (compiled windows versoin from https://github.com/songjiayang/nginx-log-exporter)
 function Install-nginx-log-exporter {
 	Write-Host "Installing nginx-log-exporter"
 	$nginxLogExporterZipFile = ".\Prometheus\nginx-log-exporter\nginx-log-exporter.zip"
@@ -121,10 +121,10 @@ function Install-nginx-log-exporter {
 	# Unzip nginx-prometheus-exporter
 	Expand-Archive -Path $nginxLogExporterZipFile -DestinationPath $nginxLogExporterInstallPath -Force
 	
-		# Config prometheus.yml
+	# Config config.yml
 	$nginxLogExporterConfig = @"
 - name: nginx
-  format: $remote_addr - $remote_user [$time_local] "$method $request $protocol" $request_time-$upstream_response_time $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"
+  format: `$remote_addr - `$remote_user [`$time_local] "`$method `$request `$protocol" `$status `$body_bytes_sent "`$http_referer" "`$http_user_agent" "`$http_x_forwarded_for" `$request_time-`$upstream_response_time
   source_files:
     - C:\Program Files\Nginx\nginx-${proxy_version}\logs\prometheus.log
   relabel_config:
@@ -156,13 +156,12 @@ function Install-nginx-log-exporter {
 	$current_path = Get-Location
 	Set-Location "C:\Program Files\nssm-2.24\win64\"
 	cmd.exe /c ".\nssm.exe install ${nginxLogExporterServiceName} `"${nginxLogExporterFile}`""
-	cmd.exe /c ".\nssm.exe set ${nginxLogExporterServiceName}"
 	Set-Location ${current_path}
 
 	# Start nginx exporter service
-	Start-Service -Name $nginxExporterServiceName
+	Start-Service -Name $nginxLogExporterServiceName
 
-	Write-Host "nginx-prometheus-exporter installed and running  http://localhost:9113/metrics"
+	Write-Host "nginx-prometheus-exporter installed and running  http://localhost:9999/metrics"
 }
 
 function Install-Prometheus {
@@ -173,8 +172,8 @@ function Install-Prometheus {
 	$prometheusInstallPath = "${prometheus_base_install_path}\Prometheus"
 	$prometheusServiceName = "Prometheus"
 
-	if (!(Test-Path $prometheusInstallPath)) {
-		New-Item -ItemType Directory -Path $prometheusInstallPath
+	if (!(Test-Path $prometheus_base_install_path)) {
+		New-Item -ItemType Directory -Path $prometheus_base_install_path
 	}
 
 	# Download and unzip prometheus
@@ -197,14 +196,22 @@ scrape_configs:
     scheme: https
     static_configs:
       - targets: ['${proxy_hostname}']
-	  
+
   - job_name: 'windows'
     static_configs:
       - targets: ['localhost:9182']
-	  
+
+  - job_name: 'postgresql'
+    static_configs:
+      - targets: ['localhost:9187']
+
   - job_name: 'nginx'
     static_configs:
       - targets: ['localhost:9113']
+
+  - job_name: 'nginx_logs'
+    static_configs:
+      - targets: ['localhost:9999']
 "@
 
 	$prometheusConfig | Out-File -Encoding utf8 "${prometheusInstallPath}\prometheus.yml"
@@ -224,19 +231,20 @@ scrape_configs:
 # Install Grafana
 function Install-Grafana {
 	$grafanaUrl = "https://dl.grafana.com/enterprise/release/grafana-enterprise-${grafana_version}.windows-amd64.zip"
+	$grafana_base_path = "C:\Program Files"
 	$grafanaInstallPath = "C:\Program Files\Grafana"
 	$grafanaZip = "grafana.zip"
 	$grafanaServiceName = "Grafana"
 
-	if (!(Test-Path $grafanaPath)) {
-		New-Item -ItemType Directory -Path $grafanaPath
-	}
+	#if (!(Test-Path $grafanaInstallPath)) {
+	#	New-Item -ItemType Directory -Path $grafanaInstallPath
+	#}
 
 	# Download and unzip Grafana
 	Invoke-WebRequest -Uri $grafanaUrl -OutFile $grafanaZip
-	Expand-Archive -Path $grafanaZip -DestinationPath $grafanaInstallPath -Force
+	Expand-Archive -Path $grafanaZip -DestinationPath $grafana_base_path -Force
 
-	#Rename-Item -Path "${grafanaInstallPath}\grafana-v${grafana_version}" -NewName "${grafanaInstallPath}" -Force
+	Rename-Item -Path "C:\Program Files\grafana-v${grafana_version}" -NewName "${grafanaInstallPath}" -Force
 	
 	# Create Grafana windows service
 	$current_path = Get-Location
@@ -245,18 +253,44 @@ function Install-Grafana {
 	Set-Location ${current_path}
 	
 	# Modify default.ini to allow domain and sub-path in Grafana
-	$grafanaConfFile = "${grafanaInstallPath}\conf\default.ini"
-	$grafanaConfFileContent = Get-Content $grafanaConfFile
-	# Comment root_url and serve_from_sub_path entries
-	$grafanaConfFileContent = $grafanaConfFileContent -replace "^(root_url\s*=)", "# $1"
-	$grafanaConfFileContent = $grafanaConfFileContent -replace "^(serve_from_sub_path\s*=)", "# $1"
-	# Add new entries
-	$contentNewEntries = @(
-		"root_url = https://${proxy_hostname}/grafana"
-		"serve_from_sub_path = true"
-	)
-	$grafanaConfFileContent + $contentNewEntries | Set-Content $grafanaConfFile -Encoding UTF8
+	$grafanaConfFile = "${grafanaInstallPath}\conf\defaults.ini"
+	(Get-Content "${grafanaConfFile}") -replace "root_url = %\(protocol\)s://%\(domain\)s:%\(http_port\)s/", "root_url = https://${proxy_hostname}/grafana" `
+                                    -replace "serve_from_sub_path = false", "serve_from_sub_path = true" `
+                                    | Set-Content "${grafanaConfFile}"
 	
+	# Config Datasource
+	New-Item -Path "${grafanaInstallPath}\conf\provisioning\datasources" -ItemType Directory -Force
+	Set-Content -Path "${grafanaInstallPath}\conf\provisioning\datasources\prometheus.yaml" -Value @"
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://localhost:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 5s
+"@
+
+	# Config Dashboards folder
+	New-Item -Path "${grafanaInstallPath}\conf\provisioning\dashboards" -ItemType Directory -Force
+	Set-Content -Path "${grafanaInstallPath}\conf\provisioning\dashboards\dashboards.yaml" -Value @"
+apiVersion: 1
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    options:
+      path: C:\Program Files\Grafana\conf\provisioning\dashboards\json
+"@
+
+	# Add dashboards
+	New-Item -Path "${grafanaInstallPath}\conf\provisioning\dashboards\json" -ItemType Directory -Force
+	Move-Item -Path ".\Prometheus\dashboards\*" -Destination "${grafanaInstallPath}\conf\provisioning\dashboards\json"
+
 	Start-Service -Name $grafanaServiceName
 
 	Write-Host "Grafana installed and running http://localhost:3000 (https://${proxy_hostname}/grafana"

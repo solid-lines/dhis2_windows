@@ -27,6 +27,13 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+Unblock-File -Path "C:\dhis2_install\JDK\install_openJDK.ps1"
+Unblock-File -Path "C:\dhis2_install\Tomcat\install_Tomcat.ps1"
+Unblock-File -Path "C:\dhis2_install\PostgreSQL\install_PostgreSQL.ps1"
+Unblock-File -Path "C:\dhis2_install\DHIS2\install_DHIS2.ps1"
+Unblock-File -Path "C:\dhis2_install\Nginx\install_Nginx.ps1"
+Unblock-File -Path "C:\dhis2_install\Prometheus\install_Prometheus.ps1"
+
 Write-Host "Init DHIS2 installation...."
 Write-Host "Loading config settings"
 
@@ -100,7 +107,7 @@ try {
 
 # Install PostgreSQL, postgis and PGAdmin
 try {
-    .\PostgreSL\install_PostgreSQL.ps1 -pg_version $pg_version -pg_username $pg_username -pg_password $pg_password -pg_port $pg_port -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -pg_memory $pg_memory -pg_cpus $pg_cpus -dhis2_db_name $dhis2_db_name -postgis_version $postgis_version
+    .\PostgreSQL\install_PostgreSQL.ps1 -pg_version $pg_version -pg_username $pg_username -pg_password $pg_password -pg_port $pg_port -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -pg_memory $pg_memory -pg_cpus $pg_cpus -dhis2_db_name $dhis2_db_name -postgis_version $postgis_version
 } catch {
     Write-Error "PostgreSQL $pg_version installation failed: $_"
 }

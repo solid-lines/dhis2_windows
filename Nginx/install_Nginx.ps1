@@ -123,7 +123,7 @@ error_log logs\error.log;
 events { worker_connections  1024; }
 
 http {
-	map $request_uri $logging {
+	map `$request_uri `$logging {
         default  1;
         ~^/grafana   0;
 		~^/glowroot   0;
@@ -133,13 +133,13 @@ http {
 	log_format  main  '`$remote_addr - `$remote_user [`$time_local] "`$request" '
         '`$status `$body_bytes_sent "`$http_referer" '
         '"`$http_user_agent" "`$http_x_forwarded_for"';
-        access_log logs\access.log;
+
 	log_format  prometheus  '`$remote_addr - `$remote_user [`$time_local] "`$request" '
         '`$status `$body_bytes_sent "`$http_referer" '
-        '"`$http_user_agent" "`$http_x_forwarded_for" `$request_time -`$upstream_response_time';
+        '"`$http_user_agent" "`$http_x_forwarded_for" `$request_time - `$upstream_response_time';
     
 	access_log logs\access.log;
-	access_log logs\prometheus.log prometheus if=$logging;
+	access_log logs\prometheus.log prometheus if=`$logging;
 	
     include  mime.types;
 	include	 *.conf;
@@ -155,7 +155,7 @@ http {
 			include proxysecurity.conf;
 		}
 		
-		location /grafana/ {
+		location /grafana {
 			proxy_pass http://localhost:3000;
 			include proxycommon.conf;
 			include proxysecurity.conf;
@@ -243,16 +243,26 @@ error_log logs\error.log;
 events { worker_connections  1024; }
 
 http {
-    log_format  main  '`$remote_addr - `$remote_user [`$time_local] "`$request" '
+	map `$request_uri `$logging {
+        default  1;
+        ~^/grafana   0;
+		~^/glowroot   0;
+		~^/api/metrics	0;
+	}
+	
+	log_format  main  '`$remote_addr - `$remote_user [`$time_local] "`$request" '
         '`$status `$body_bytes_sent "`$http_referer" '
         '"`$http_user_agent" "`$http_x_forwarded_for"';
-        access_log logs\access.log;
 
+	log_format  prometheus  '`$remote_addr - `$remote_user [`$time_local] "`$request" '
+        '`$status `$body_bytes_sent "`$http_referer" '
+        '"`$http_user_agent" "`$http_x_forwarded_for" `$request_time - `$upstream_response_time';
+    
+	access_log logs\access.log;
+	access_log logs\prometheus.log prometheus if=`$logging;
+	
     include  mime.types;
-	include	 performance.conf;
-	include	 security.conf;
-	include  gzip.conf;
-	include  ssl.conf;
+	include	 *.conf;
     default_type  application/octet-stream;
 	
 	server {
@@ -268,8 +278,8 @@ http {
 			include proxysecurity.conf;
 		}
 		
-		location /grafana/ {
-			proxy_pass http://localhost:3000/;
+		location /grafana {
+			proxy_pass http://localhost:3000;
 			include proxycommon.conf;
 			include proxysecurity.conf;
 		}

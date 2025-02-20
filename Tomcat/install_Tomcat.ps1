@@ -284,7 +284,7 @@ if ($service) {
 	# If tomcat service is running, stop it
 	if ($service.Status -ieq "Running") {
 		Write-Host "Tomcat service ${tomcat_service_name} found"	
-		Stop-Service -Name $serviceName -Force -ErrorAction Stop
+		Stop-Service -Name $tomcat_service_name -Force -ErrorAction Stop
 		Write-Host "Stopped service ${tomcat_service_name}"
 	} 
 }
