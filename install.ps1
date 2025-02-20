@@ -52,7 +52,6 @@ $glowroot_password = $config.monitoring.glowroot.password
 $prometheus_grafana_enabled = $config.monitoring.prometheus_grafana.enabled
 $prometheus_version = $config.monitoring.prometheus_grafana.prometheus_version
 $grafana_version = $config.monitoring.prometheus_grafana.grafana_version
-$windows_exporter_version = $config.monitoring.prometheus_grafana.windows_exporter_version
 $pg_version = $config.postgresql.version
 $pg_host = $config.postgresql.host
 $pg_port = $config.postgresql.port
@@ -69,6 +68,7 @@ $dhis2_path = $config.dhis2.path
 $dhis2_db_name = $config.dhis2.db_name
 $dhis2_db_username = $config.dhis2.db_username
 $dhis2_db_password = $config.dhis2.db_password
+$proxy_name = $config.proxy.name
 $proxy_version = $config.proxy.version
 $proxy_hostname = $config.proxy.hostname
 $proxy_service_name = $config.proxy.service_name
@@ -86,44 +86,44 @@ if (${proxy_hostname} -ne "localhost") {
 
 # Install JDK
 try {
-    .\install_OpenJDK.ps1 -jdk_version $jdk_version
+    .\JDK\install_OpenJDK.ps1 -jdk_version $jdk_version
 } catch {
     Write-Error "JDK $jdk_version installation failed: $_"
 }
 
 # Install Tomcat and Glowroot
 try {
-    .\install_Tomcat.ps1 -tomcat_version $tomcat_version -tomcat_service_name $tomcat_service_name -tomcat_path $tomcat_path -tomcat_xmx $tomcat_xmx -tomcat_xms $tomcat_xms -tomcat_username $tomcat_username -tomcat_password $tomcat_password -glowroot_enabled $glowroot_enabled -glowroot_version $glowroot_version -glowroot_username $glowroot_username -glowroot_password $glowroot_password
+    .\Tomcat\install_Tomcat.ps1 -tomcat_version $tomcat_version -tomcat_service_name $tomcat_service_name -tomcat_path $tomcat_path -tomcat_xmx $tomcat_xmx -tomcat_xms $tomcat_xms -tomcat_username $tomcat_username -tomcat_password $tomcat_password -glowroot_enabled $glowroot_enabled -glowroot_version $glowroot_version -glowroot_username $glowroot_username -glowroot_password $glowroot_password
 } catch {
     Write-Error "Tomcat $tomcat_version installation failed: $_"
 }
 
 # Install PostgreSQL, postgis and PGAdmin
 try {
-    .\install_PostgreSQL.ps1 -pg_version $pg_version -pg_username $pg_username -pg_password $pg_password -pg_port $pg_port -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -pg_memory $pg_memory -pg_cpus $pg_cpus -dhis2_db_name $dhis2_db_name -postgis_version $postgis_version
+    .\PostgreSL\install_PostgreSQL.ps1 -pg_version $pg_version -pg_username $pg_username -pg_password $pg_password -pg_port $pg_port -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -pg_memory $pg_memory -pg_cpus $pg_cpus -dhis2_db_name $dhis2_db_name -postgis_version $postgis_version
 } catch {
     Write-Error "PostgreSQL $pg_version installation failed: $_"
 }
 
 # Install DHIS2
 try {
-    .\install_DHIS2.ps1 -dhis2_version $dhis2_version -dhis2_path $dhis2_path -dhis2_db_name $dhis2_db_name -dhis2_db_username $dhis2_db_username -dhis2_db_password $dhis2_db_password -dhis2_home $dhis2_home -pg_version $pg_version -pg_host $pg_host -pg_port $pg_port -pg_username $pg_username -pg_password $pg_password -pg_service_name $pg_service_name -tomcat_service_name $tomcat_service_name -tomcat_version $tomcat_version -proxy_hostname $proxy_hostname
+    .\DHIS2\install_DHIS2.ps1 -dhis2_version $dhis2_version -dhis2_path $dhis2_path -dhis2_db_name $dhis2_db_name -dhis2_db_username $dhis2_db_username -dhis2_db_password $dhis2_db_password -dhis2_home $dhis2_home -pg_version $pg_version -pg_host $pg_host -pg_port $pg_port -pg_username $pg_username -pg_password $pg_password -pg_service_name $pg_service_name -tomcat_path $tomcat_path -tomcat_service_name $tomcat_service_name -proxy_hostname $proxy_hostname
 } catch {
     Write-Error "DHIS2 $dhis2_version installation failed: $_"
 }
 
 # Install Nginx
 try {
-    .\install_Nginx.ps1 -proxy_hostname $proxy_hostname -proxy_version $proxy_version -proxy_service_name $proxy_service_name
+	if ($proxy_name -ieq "nginx") {
+		.\Nginx\install_Nginx.ps1 -proxy_hostname $proxy_hostname -proxy_version $proxy_version -proxy_service_name $proxy_service_name
+	}
 } catch {
     Write-Error "Nginx installation failed: $_"
 }
 
 # Install Prometheus and Grafana
 try {
-    if ($prometheus_grafana_enabled -eq "Y") {
-		.\install_Prometheus.ps1 -tomcat_path $tomcat_path -prometheus_version $prometheus_version -grafana_version $grafana_version -windows_exporter_version $windows_exporter_version
-	}
+    .\Prometheus\install_Prometheus.ps1 -proxy_hostname $proxy_hostname -proxy_version $proxy_version -prometheus_version $prometheus_version -grafana_version $grafana_version -pg_username $pg_username -pg_password $pg_password -dhis2_db_name $dhis2_db_name
 } catch {
     Write-Error "Prometheus and Grafana installation failed: $_"
 }

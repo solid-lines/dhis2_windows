@@ -20,9 +20,8 @@
     },
     "prometheus_grafana": {
       "enabled": "Y",
-      "prometheus_version": "3.1.0",
-      "grafana_version": "11.5.1",
-      "windows_exporter_version": "0.30.2"
+      "prometheus_version": "3.2.0",
+      "grafana_version": "11.5.1"
     }
   },
   "postgresql": {
@@ -30,7 +29,7 @@
 	"host": "localhost",
 	"username": "postgres",
 	"password": "postgres",
-	"service_name": "postgres16",
+	"service_name": "Postgres16",
 	"max_connections": "80",
 	"memory": "10",
 	"cpus": "3",
@@ -38,7 +37,7 @@
 	"postgis_version": "3.5.2"
   },
   "dhis2": {
-    "version": "40",
+    "version": "40.6.0",
 	"home": "C:\\dhis2-home",
 	"path": "ROOT",
 	"db_name": "dhis2",
@@ -47,7 +46,7 @@
   },
   "proxy": {
 	  "name": "nginx",
-	  "service_name": "nginx",
+	  "service_name": "Nginx",
 	  "version": "1.26.2",
 	  "hostname": "dhis2-windows.solidlines.io"
   }
