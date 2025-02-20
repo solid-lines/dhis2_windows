@@ -14,6 +14,7 @@ param (
 	[string]$pg_username,
 	[string]$pg_password,
 	[string]$pg_service_name,
+	[string]$pg_max_connections,
 	[string]$tomcat_path,
 	[string]$tomcat_service_name,
 	[string]$proxy_hostname
@@ -76,6 +77,10 @@ function Configure-DHIS2 {
 		New-Item -Path $dhis2_home -ItemType Directory
 	}
 	
+	# Leave free connections in postgresql
+	$dhis2MaxPoolInt = [int]$pg_max_connections - 10
+	$dhis2MaxPool = $dhis2MaxPoolInt.ToString()
+	
 	Write-Host "Configuring dhis.conf"
 	$dhis2_config_file = "${dhis2_home}\dhis.conf"
 	Set-Content -Path $dhis2_config_file -Value @"
@@ -85,7 +90,7 @@ connection.url=jdbc:postgresql://${pg_host}:${pg_port}/${dhis2_db_name}
 connection.username=${dhis2_db_username}
 connection.password=${dhis2_db_password}
 connection.schema = update
-connection.pool.max_size = 70
+connection.pool.max_size = ${dhis2MaxPool}
 server.base.url = https://${proxy_hostname}
 server.https = on
 connection.pool.max_idle_time_excess_con = 30

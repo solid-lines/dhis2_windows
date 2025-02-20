@@ -107,7 +107,7 @@ try {
 
 # Install DHIS2
 try {
-    .\DHIS2\install_DHIS2.ps1 -dhis2_version $dhis2_version -dhis2_path $dhis2_path -dhis2_db_name $dhis2_db_name -dhis2_db_username $dhis2_db_username -dhis2_db_password $dhis2_db_password -dhis2_home $dhis2_home -pg_version $pg_version -pg_host $pg_host -pg_port $pg_port -pg_username $pg_username -pg_password $pg_password -pg_service_name $pg_service_name -tomcat_path $tomcat_path -tomcat_service_name $tomcat_service_name -proxy_hostname $proxy_hostname
+    .\DHIS2\install_DHIS2.ps1 -dhis2_version $dhis2_version -dhis2_path $dhis2_path -dhis2_db_name $dhis2_db_name -dhis2_db_username $dhis2_db_username -dhis2_db_password $dhis2_db_password -dhis2_home $dhis2_home -pg_version $pg_version -pg_host $pg_host -pg_port $pg_port -pg_username $pg_username -pg_password $pg_password -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -tomcat_path $tomcat_path -tomcat_service_name $tomcat_service_name -proxy_hostname $proxy_hostname
 } catch {
     Write-Error "DHIS2 $dhis2_version installation failed: $_"
 }
