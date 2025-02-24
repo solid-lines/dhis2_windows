@@ -27,12 +27,12 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-Unblock-File -Path "C:\dhis2_install\JDK\install_openJDK.ps1"
-Unblock-File -Path "C:\dhis2_install\Tomcat\install_Tomcat.ps1"
-Unblock-File -Path "C:\dhis2_install\PostgreSQL\install_PostgreSQL.ps1"
-Unblock-File -Path "C:\dhis2_install\DHIS2\install_DHIS2.ps1"
-Unblock-File -Path "C:\dhis2_install\Nginx\install_Nginx.ps1"
-Unblock-File -Path "C:\dhis2_install\Prometheus\install_Prometheus.ps1"
+Unblock-File -Path ".\JDK\install_openJDK.ps1"
+Unblock-File -Path ".\Tomcat\install_Tomcat.ps1"
+Unblock-File -Path ".\PostgreSQL\install_PostgreSQL.ps1"
+Unblock-File -Path ".\DHIS2\install_DHIS2.ps1"
+Unblock-File -Path ".\Nginx\install_Nginx.ps1"
+Unblock-File -Path ".\Prometheus\install_Prometheus.ps1"
 
 Write-Host "Init DHIS2 installation...."
 Write-Host "Loading config settings"
@@ -130,7 +130,9 @@ try {
 
 # Install Prometheus and Grafana
 try {
-    .\Prometheus\install_Prometheus.ps1 -proxy_hostname $proxy_hostname -proxy_version $proxy_version -prometheus_version $prometheus_version -grafana_version $grafana_version -pg_username $pg_username -pg_password $pg_password -dhis2_db_name $dhis2_db_name
+	if ($prometheus_grafana_enabled -ieq "Y") {
+		.\Prometheus\install_Prometheus.ps1 -proxy_hostname $proxy_hostname -proxy_version $proxy_version -prometheus_version $prometheus_version -grafana_version $grafana_version -pg_username $pg_username -pg_password $pg_password -dhis2_db_name $dhis2_db_name
+	}
 } catch {
     Write-Error "Prometheus and Grafana installation failed: $_"
 }
