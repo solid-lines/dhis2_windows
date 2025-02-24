@@ -142,7 +142,10 @@ http {
 	access_log logs\prometheus.log prometheus if=`$logging;
 	
     include  mime.types;
-	include	 *.conf;
+	include	 gzip.conf;
+	include  performance.conf;
+	include  security.conf;
+	include  stub_status.conf;
     default_type  application/octet-stream;
 
     server {
@@ -262,7 +265,10 @@ http {
 	access_log logs\prometheus.log prometheus if=`$logging;
 	
     include  mime.types;
-	include	 *.conf;
+	include	 gzip.conf;
+	include  performance.conf;
+	include  security.conf;
+	include  stub_status.conf;
     default_type  application/octet-stream;
 	
 	server {
