@@ -302,7 +302,7 @@ providers:
 	Restart-Service -Name $grafanaServiceName
 	Start-Sleep -Seconds 5
 
-	Write-Host "Grafana installed and running http://localhost:3000 (https://${proxy_hostname}/grafana"
+	Write-Host "Grafana installed and running http://localhost:3000 (https://${proxy_hostname}/grafana" 
 }
 
 #######################
