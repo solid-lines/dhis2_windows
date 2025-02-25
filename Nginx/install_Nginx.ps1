@@ -25,7 +25,7 @@ function Download-Install-Nginx {
 	if (Test-Path -Path ${nginx_install_path}) {
 		Remove-Item -Path ${nginx_install_path} -Recurse -Force
 	}
-	Expand-Archive -Path $nginxZip -DestinationPath ${nginx_install_path} -Force
+	Expand-Archive -Path $nginxZip -DestinationPath ${nginx_install_path} -Force *> $null
 	#Remove-Item -Path $nginxZip
 }
 
@@ -181,7 +181,7 @@ function Create-Nginx-Service {
 	$nssm_url = "https://nssm.cc/release/nssm-2.24.zip"
 	$nssm_file = ".\nssm.zip"
 	Invoke-WebRequest -Uri ${nssm_url} -OutFile ${nssm_file} -UseBasicParsing
-	Expand-Archive -Path ${nssm_file} -DestinationPath "C:\Program Files\" -Force
+	Expand-Archive -Path ${nssm_file} -DestinationPath "C:\Program Files\" -Force *> $null
 	Remove-Item -Path ${nssm_file}
 	$current_path = Get-Location
 	Set-Location "C:\Program Files\nssm-2.24\win64\"

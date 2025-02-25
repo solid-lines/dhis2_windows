@@ -34,7 +34,7 @@ function Install-postgres_exporter {
 	}
 
 	# Unzip postgres_exporter
-	Expand-Archive -Path $pgExporterZipFile -DestinationPath $pgExporterInstallPath -Force
+	Expand-Archive -Path $pgExporterZipFile -DestinationPath $pgExporterInstallPath -Force *> $null
 
 	# Create windows exporter service
 	$current_path = Get-Location
@@ -64,7 +64,7 @@ Write-Host "Installing windows_exporter v${windows_exporter_version}"
 	}
 	
 	# Unzip windows_exporter
-	Expand-Archive -Path $windowsExporterZipFile -DestinationPath $windowsExporterInstallPath -Force
+	Expand-Archive -Path $windowsExporterZipFile -DestinationPath $windowsExporterInstallPath -Force *> $null
 
 	# Create windows_exporter service
 	$current_path = Get-Location
@@ -93,7 +93,7 @@ function Install-nginx-prometheus-exporter {
 	}
 	
 	# Unzip nginx-prometheus-exporter
-	Expand-Archive -Path $nginxExporterZipFile -DestinationPath $nginxExporterInstallPath -Force
+	Expand-Archive -Path $nginxExporterZipFile -DestinationPath $nginxExporterInstallPath -Force *> $null
 	
 	# Create nginx exporter service
 	$current_path = Get-Location
@@ -122,7 +122,7 @@ function Install-nginx-log-exporter {
 	}
 	
 	# Unzip nginx-prometheus-exporter
-	Expand-Archive -Path $nginxLogExporterZipFile -DestinationPath $nginxLogExporterInstallPath -Force
+	Expand-Archive -Path $nginxLogExporterZipFile -DestinationPath $nginxLogExporterInstallPath -Force *> $null
 	
 	# Config config.yml
 	$nginxLogExporterConfig = @"
@@ -181,7 +181,7 @@ function Install-Prometheus {
 
 	# Download and unzip prometheus
 	Invoke-WebRequest -Uri $prometheusUrl -OutFile $prometheusZip
-	Expand-Archive -Path $prometheusZip -DestinationPath $prometheus_base_install_path -Force
+	Expand-Archive -Path $prometheusZip -DestinationPath $prometheus_base_install_path -Force *> $null
 	Rename-Item -Path "${prometheus_base_install_path}\prometheus-${prometheus_version}.windows-amd64" -NewName "${prometheusInstallPath}" -Force
 	
 	# Config prometheus.yml
@@ -245,7 +245,7 @@ function Install-Grafana {
 
 	# Download and unzip Grafana
 	Invoke-WebRequest -Uri $grafanaUrl -OutFile $grafanaZip
-	Expand-Archive -Path $grafanaZip -DestinationPath $grafana_base_path -Force
+	Expand-Archive -Path $grafanaZip -DestinationPath $grafana_base_path -Force *> $null
 
 	Rename-Item -Path "C:\Program Files\grafana-v${grafana_version}" -NewName "${grafanaInstallPath}" -Force
 	

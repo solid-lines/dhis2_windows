@@ -85,8 +85,8 @@ $proxy_service_name = $config.proxy.service_name
 # If hostname is not localhost, create firewall rules to open ports 80 and 443
 if (${proxy_hostname} -ne "localhost") {
 	Write-Host "Adding firewall rules to allow HTTP and HTTPS connections."
-	Add-PortFirewall -Port 80
-	Add-PortFirewall -Port 443
+	Add-PortFirewall -Port 80 *> $null
+	Add-PortFirewall -Port 443 *> $null
 } else {
 	Write-Host "Hostname is localhost. No firewall rules needed."
 }
