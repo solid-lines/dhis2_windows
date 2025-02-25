@@ -11,7 +11,10 @@ param (
 	[string]$proxy_version
 )
 
-$prometheus_base_install_path = "C:\Program Files\Prometheus" 
+$prometheus_base_install_path = "C:\Program Files\Prometheus"
+$postgres_exporter_version = "0.16.0"
+$windows_exporter_version = "0.30.4"
+$nginx-prometheus-exporter_version = "1.4.1"
 
 #######################
 # Functions
@@ -19,8 +22,8 @@ $prometheus_base_install_path = "C:\Program Files\Prometheus"
 
 # Install postgres exporter v0.16.0
 function Install-postgres_exporter {
-	Write-Host "Installing postgres_exporter v0.16.0"
-	$pgExporterZipFile = ".\Prometheus\postgres_exporter\postgres_exporter-0.16.0.zip"
+	Write-Host "Installing postgres_exporter v${postgres_exporter_version}"
+	$pgExporterZipFile = ".\Prometheus\postgres_exporter\postgres_exporter-${postgres_exporter_version}.zip"
 	$pgExporterInstallPath = "${prometheus_base_install_path}\postgres_exporter"
 	$pgExporterFile = "${pgExporterInstallPath}\postgres_exporter.exe"
 	$pgExporterServiceName = "postgres_exporter"
@@ -49,8 +52,8 @@ function Install-postgres_exporter {
 
 # Install windows_exporter v0.30.4
 function Install-windows_exporter {
-	Write-Host "Installing windows_exporter v0.30.4"
-	$windowsExporterZipFile = ".\Prometheus\windows_exporter\windows_exporter-0.30.4.zip"
+Write-Host "Installing windows_exporter v${windows_exporter_version}"
+	$windowsExporterZipFile = ".\Prometheus\windows_exporter\windows_exporter-${windows_exporter_version}.zip"
 	$windowsExporterInstallPath = "${prometheus_base_install_path}\windows_exporter"
 	$windowsExporterFile = "${windowsExporterInstallPath}\windows_exporter.exe"
 	$windowsExporterServiceName = "windows_exporter"
@@ -78,8 +81,8 @@ function Install-windows_exporter {
 
 # Install nginx-prometheus-exporter v1.4.1
 function Install-nginx-prometheus-exporter {
-	Write-Host "Installing nginx-prometheus-exporter v1.4.1"
-	$nginxExporterZipFile = ".\Prometheus\nginx-prometheus-exporter\nginx-prometheus-exporter-1.4.1.zip"
+	Write-Host "Installing nginx-prometheus-exporter v${nginx-prometheus-exporter_version}"
+	$nginxExporterZipFile = ".\Prometheus\nginx-prometheus-exporter\nginx-prometheus-exporter-${nginx-prometheus-exporter_version}.zip"
 	$nginxExporterInstallPath = "${prometheus_base_install_path}\nginx-prometheus-exporter"
 	$nginxExporterFile = "${nginxExporterInstallPath}\nginx-prometheus-exporter.exe"
 	$nginxExporterServiceName = "nginx-prometheus-exporter"
@@ -257,6 +260,10 @@ function Install-Grafana {
 	(Get-Content "${grafanaConfFile}") -replace "root_url = %\(protocol\)s://%\(domain\)s:%\(http_port\)s/", "root_url = https://${proxy_hostname}/grafana" `
                                     -replace "serve_from_sub_path = false", "serve_from_sub_path = true" `
                                     | Set-Content "${grafanaConfFile}"
+									
+	# Start Grafana Iniciar Grafana primero para que cree los archivos de configuración
+	Start-Service -Name $grafanaServiceName
+	Start-Sleep -Seconds 5
 	
 	# Config Datasource
 	New-Item -Path "${grafanaInstallPath}\conf\provisioning\datasources" -ItemType Directory -Force
@@ -291,7 +298,9 @@ providers:
 	New-Item -Path "${grafanaInstallPath}\conf\provisioning\dashboards\json" -ItemType Directory -Force
 	Move-Item -Path ".\Prometheus\dashboards\*" -Destination "${grafanaInstallPath}\conf\provisioning\dashboards\json"
 
-	Start-Service -Name $grafanaServiceName
+	# Restart Grafana service
+	Restart-Service -Name $grafanaServiceName
+	Start-Sleep -Seconds 5
 
 	Write-Host "Grafana installed and running http://localhost:3000 (https://${proxy_hostname}/grafana"
 }
