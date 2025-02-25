@@ -153,7 +153,7 @@ http {
         server_name ${proxy_hostname};
 		
 		location /glowroot {
-			proxy_pass http://localhost:4000/;
+			proxy_pass http://localhost:4000;
             include proxycommon.conf;
 			include proxysecurity.conf;
 		}
@@ -279,7 +279,7 @@ http {
 		ssl_certificate_key  C:\Certbot\live\${proxy_hostname}\privkey.pem;
 	
 		location /glowroot {
-			proxy_pass http://localhost:4000/;
+			proxy_pass http://localhost:4000;
             include proxycommon.conf;
 			include proxysecurity.conf;
 		}

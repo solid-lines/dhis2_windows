@@ -84,15 +84,12 @@ function Install-Tomcat {
 	
 	# If tomcat destination path exists, remove it. Rename Tomcat installation path to new path
 	if (Test-Path $tomcat_install_path) {
-	Remove-Item -Path $tomcat_install_path -Recurse -Force
+		Remove-Item -Path $tomcat_install_path -Recurse -Force | Out-Null
 	}
-	Rename-Item -Path $tomcat_install_old_path -NewName $tomcat_install_path -Force
-	
-	# Adjust permissions
-	icacls ${tomcat_install_path} /grant "NT AUTHORITY\LOCAL SERVICE:(OI)(CI)F" /T
+	Rename-Item -Path $tomcat_install_old_path -NewName $tomcat_install_path -Force | Out-Null
 	
 	# remove al items in webapps folder
-	Get-ChildItem -Path "${tomcat_install_path}\webapps" -Recurse | Remove-Item -Recurse -Force
+	Get-ChildItem -Path "${tomcat_install_path}\webapps" -Recurse | Remove-Item -Recurse -Force | Out-Null
 	
 	# Update tomcat-users.xml
 	Write-Host "Updating tomcat-users.xml..."
@@ -301,6 +298,9 @@ if ($glowroot_enabled -ieq "Y") {
 	Install-Glowroot
 }
 
+# Adjust permissions
+icacls ${tomcat_install_path} /grant "NT AUTHORITY\LOCAL SERVICE:(OI)(CI)F" /T | Out-Null
+	
 $current_path = Get-Location
 Set-Location ${tomcat_install_path}\bin
 if (-Not ($service)) {
