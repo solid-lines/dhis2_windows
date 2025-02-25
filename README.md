@@ -7,4 +7,5 @@ Previous steps:
 * Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 * Unblock-File -Path .\install.ps1
 
+Install DHIS2 with:
 * .\install.ps1
