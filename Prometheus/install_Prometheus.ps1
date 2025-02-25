@@ -14,7 +14,7 @@ param (
 $prometheus_base_install_path = "C:\Program Files\Prometheus"
 $postgres_exporter_version = "0.16.0"
 $windows_exporter_version = "0.30.4"
-$nginx-prometheus-exporter_version = "1.4.1"
+$nginx_prometheus_exporter_version = "1.4.1"
 
 #######################
 # Functions
@@ -30,11 +30,11 @@ function Install-postgres_exporter {
 
 	# Create install path if it does not exist
 	if (!(Test-Path "${pgExporterInstallPath}")) {
-		New-Item -ItemType Directory -Path "${pgExporterInstallPath}"
+		New-Item -ItemType Directory -Path "${pgExporterInstallPath}" | Out-Null
 	}
 
 	# Unzip postgres_exporter
-	Expand-Archive -Path $pgExporterZipFile -DestinationPath $pgExporterInstallPath -Force *> $null
+	Expand-Archive -Path $pgExporterZipFile -DestinationPath $pgExporterInstallPath -Force | Out-Null
 
 	# Create windows exporter service
 	$current_path = Get-Location
@@ -60,11 +60,11 @@ Write-Host "Installing windows_exporter v${windows_exporter_version}"
 
 	# Create install path if it does not exist
 	if (!(Test-Path "${windowsExporterInstallPath}")) {
-		New-Item -ItemType Directory -Path "${windowsExporterInstallPath}"
+		New-Item -ItemType Directory -Path "${windowsExporterInstallPath}" | Out-Null
 	}
 	
 	# Unzip windows_exporter
-	Expand-Archive -Path $windowsExporterZipFile -DestinationPath $windowsExporterInstallPath -Force *> $null
+	Expand-Archive -Path $windowsExporterZipFile -DestinationPath $windowsExporterInstallPath -Force | Out-Null
 
 	# Create windows_exporter service
 	$current_path = Get-Location
@@ -81,19 +81,19 @@ Write-Host "Installing windows_exporter v${windows_exporter_version}"
 
 # Install nginx-prometheus-exporter v1.4.1
 function Install-nginx-prometheus-exporter {
-	Write-Host "Installing nginx-prometheus-exporter v${nginx-prometheus-exporter_version}"
-	$nginxExporterZipFile = ".\Prometheus\nginx-prometheus-exporter\nginx-prometheus-exporter-${nginx-prometheus-exporter_version}.zip"
+	Write-Host "Installing nginx-prometheus-exporter v${nginx_prometheus_exporter_version}"
+	$nginxExporterZipFile = ".\Prometheus\nginx-prometheus-exporter\nginx-prometheus-exporter-${nginx_prometheus_exporter_version}.zip"
 	$nginxExporterInstallPath = "${prometheus_base_install_path}\nginx-prometheus-exporter"
 	$nginxExporterFile = "${nginxExporterInstallPath}\nginx-prometheus-exporter.exe"
 	$nginxExporterServiceName = "nginx-prometheus-exporter"
 
 	# Create install path if it does not exist
 	if (!(Test-Path "${nginxExporterInstallPath}")) {
-		New-Item -ItemType Directory -Path "${nginxExporterInstallPath}"
+		New-Item -ItemType Directory -Path "${nginxExporterInstallPath}" | Out-Null
 	}
 	
 	# Unzip nginx-prometheus-exporter
-	Expand-Archive -Path $nginxExporterZipFile -DestinationPath $nginxExporterInstallPath -Force *> $null
+	Expand-Archive -Path $nginxExporterZipFile -DestinationPath $nginxExporterInstallPath -Force | Out-Null
 	
 	# Create nginx exporter service
 	$current_path = Get-Location
@@ -118,11 +118,11 @@ function Install-nginx-log-exporter {
 	
 	# Create install path if it does not exist
 	if (!(Test-Path "${nginxLogExporterInstallPath}")) {
-		New-Item -ItemType Directory -Path "${nginxLogExporterInstallPath}"
+		New-Item -ItemType Directory -Path "${nginxLogExporterInstallPath}" | Out-Null
 	}
 	
 	# Unzip nginx-prometheus-exporter
-	Expand-Archive -Path $nginxLogExporterZipFile -DestinationPath $nginxLogExporterInstallPath -Force *> $null
+	Expand-Archive -Path $nginxLogExporterZipFile -DestinationPath $nginxLogExporterInstallPath -Force | Out-Null
 	
 	# Config config.yml
 	$nginxLogExporterConfig = @"
@@ -176,12 +176,12 @@ function Install-Prometheus {
 	$prometheusServiceName = "Prometheus"
 
 	if (!(Test-Path $prometheus_base_install_path)) {
-		New-Item -ItemType Directory -Path $prometheus_base_install_path
+		New-Item -ItemType Directory -Path $prometheus_base_install_path | Out-Null
 	}
 
 	# Download and unzip prometheus
 	Invoke-WebRequest -Uri $prometheusUrl -OutFile $prometheusZip
-	Expand-Archive -Path $prometheusZip -DestinationPath $prometheus_base_install_path -Force *> $null
+	Expand-Archive -Path $prometheusZip -DestinationPath $prometheus_base_install_path -Force | Out-Null
 	Rename-Item -Path "${prometheus_base_install_path}\prometheus-${prometheus_version}.windows-amd64" -NewName "${prometheusInstallPath}" -Force
 	
 	# Config prometheus.yml
@@ -245,7 +245,7 @@ function Install-Grafana {
 
 	# Download and unzip Grafana
 	Invoke-WebRequest -Uri $grafanaUrl -OutFile $grafanaZip
-	Expand-Archive -Path $grafanaZip -DestinationPath $grafana_base_path -Force *> $null
+	Expand-Archive -Path $grafanaZip -DestinationPath $grafana_base_path -Force | Out-Null
 
 	Rename-Item -Path "C:\Program Files\grafana-v${grafana_version}" -NewName "${grafanaInstallPath}" -Force
 	
@@ -266,7 +266,7 @@ function Install-Grafana {
 	Start-Sleep -Seconds 5
 	
 	# Config Datasource
-	New-Item -Path "${grafanaInstallPath}\conf\provisioning\datasources" -ItemType Directory -Force
+	New-Item -Path "${grafanaInstallPath}\conf\provisioning\datasources" -ItemType Directory -Force | Out-Null
 	Set-Content -Path "${grafanaInstallPath}\conf\provisioning\datasources\prometheus.yaml" -Value @"
 apiVersion: 1
 datasources:
@@ -280,7 +280,7 @@ datasources:
 "@
 
 	# Config Dashboards folder
-	New-Item -Path "${grafanaInstallPath}\conf\provisioning\dashboards" -ItemType Directory -Force
+	New-Item -Path "${grafanaInstallPath}\conf\provisioning\dashboards" -ItemType Directory -Force | Out-Null
 	Set-Content -Path "${grafanaInstallPath}\conf\provisioning\dashboards\dashboards.yaml" -Value @"
 apiVersion: 1
 providers:
@@ -295,7 +295,7 @@ providers:
 "@
 
 	# Add dashboards
-	New-Item -Path "${grafanaInstallPath}\conf\provisioning\dashboards\json" -ItemType Directory -Force
+	New-Item -Path "${grafanaInstallPath}\conf\provisioning\dashboards\json" -ItemType Directory -Force | Out-Null
 	Move-Item -Path ".\Prometheus\dashboards\*" -Destination "${grafanaInstallPath}\conf\provisioning\dashboards\json"
 
 	# Restart Grafana service

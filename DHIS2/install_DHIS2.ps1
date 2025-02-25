@@ -74,7 +74,7 @@ function Download-DHIS2 {
 function Configure-DHIS2 {
 	Write-Host "Configuring DHIS2_HOME in ${dhis_home}"
 	if (-Not (Test-Path -Path $dhis2_home)) {
-		New-Item -Path $dhis2_home -ItemType Directory
+		New-Item -Path $dhis2_home -ItemType Directory | Out-Null
 	}
 	
 	# Leave free connections in postgresql
@@ -165,7 +165,7 @@ function Create-DHIS2-Database {
 	# Add .pgpass entry
 	$pgpass_path = "$env:APPDATA\postgresql\pgpass.conf"
 	if (-not (Test-Path -Path (Split-Path -Path ${pgpass_path}))) {
-		New-Item -ItemType Directory -Path (Split-Path -Path ${pgpass_path}) -Force
+		New-Item -ItemType Directory -Path (Split-Path -Path ${pgpass_path}) -Force | Out-Null
 	}
 	$current_pgpass_entries = Get-Content -Path ${pgpass_path}
 	$dhis2_entry = "localhost:${pg_port}:${dhis2_db_name}:${dhis2_db_username}:${dhis2_db_password}"

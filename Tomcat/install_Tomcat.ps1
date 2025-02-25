@@ -79,7 +79,7 @@ function Install-Tomcat {
 	if (-Not (Test-Path -Path $tomcat_base_dir)) {
 		New-Item -ItemType Directory -Path $tomcat_base_dir | Out-Null
 	}
-	Expand-Archive -Path $tomcat_download_file -DestinationPath $tomcat_base_dir -Force *> $null
+	Expand-Archive -Path $tomcat_download_file -DestinationPath $tomcat_base_dir -Force | Out-Null
 	$tomcat_install_old_path = "${tomcat_base_dir}\apache-tomcat-${tomcat_version}"
 	
 	# If tomcat destination path exists, remove it. Rename Tomcat installation path to new path
@@ -209,10 +209,10 @@ function Install-Glowroot {
 	# Extract Glowroot 
 	Write-Host "Extracting Glowroot v${glowroot_version} to ${tomcat_base_dir}"
 	if (-Not (Test-Path -Path $tomcat_base_dir)) {
-		New-Item -ItemType Directory -Path $tomcat_base_dir
+		New-Item -ItemType Directory -Path $tomcat_base_dir | Out-Null
 	}
-	Expand-Archive -Path $glowroot_download_file -DestinationPath $tomcat_base_dir -Force *> $null
-	Expand-Archive -Path $glowroot_central_download_file -DestinationPath $tomcat_base_dir -Force *> $null
+	Expand-Archive -Path $glowroot_download_file -DestinationPath $tomcat_base_dir -Force | Out-Null
+	Expand-Archive -Path $glowroot_central_download_file -DestinationPath $tomcat_base_dir -Force | Out-Null
 	
 	Write-Host "Configuring Glowroot v${glowroot_version}..."
 	$glowroot_hash_password = & java -jar ${tomcat_base_dir}\glowroot-central\glowroot-central.jar hash-password $glowroot_password

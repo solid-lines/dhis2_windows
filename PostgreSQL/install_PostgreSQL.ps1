@@ -222,7 +222,7 @@ Configure-PostgreSQL -pg_cpus $pg_cpus -pg_memory_gb $pg_memory_gb -pg_max_conne
 # Add .pgpass entry
 $pgpass_path = "$env:APPDATA\postgresql\pgpass.conf"
 if (-not (Test-Path -Path (Split-Path -Path ${pgpass_path}))) {
-	New-Item -ItemType Directory -Path (Split-Path -Path $pgpass_path) -Force
+	New-Item -ItemType Directory -Path (Split-Path -Path $pgpass_path) -Force | Out-Null
 	New-Item -Path $pgpass_path -ItemType File -Force | Out-Null
 }
 $current_pgpass_entries = Get-Content -Path $pgpass_path

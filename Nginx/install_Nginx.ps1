@@ -25,7 +25,7 @@ function Download-Install-Nginx {
 	if (Test-Path -Path ${nginx_install_path}) {
 		Remove-Item -Path ${nginx_install_path} -Recurse -Force
 	}
-	Expand-Archive -Path $nginxZip -DestinationPath ${nginx_install_path} -Force *> $null
+	Expand-Archive -Path $nginxZip -DestinationPath ${nginx_install_path} -Force | Out-Null
 	#Remove-Item -Path $nginxZip
 }
 
@@ -181,7 +181,7 @@ function Create-Nginx-Service {
 	$nssm_url = "https://nssm.cc/release/nssm-2.24.zip"
 	$nssm_file = ".\nssm.zip"
 	Invoke-WebRequest -Uri ${nssm_url} -OutFile ${nssm_file} -UseBasicParsing
-	Expand-Archive -Path ${nssm_file} -DestinationPath "C:\Program Files\" -Force *> $null
+	Expand-Archive -Path ${nssm_file} -DestinationPath "C:\Program Files\" -Force | Out-Null
 	Remove-Item -Path ${nssm_file}
 	$current_path = Get-Location
 	Set-Location "C:\Program Files\nssm-2.24\win64\"
@@ -195,7 +195,7 @@ function Create-Nginx-Service {
 function Install-Certbot {
 	Write-Host "Downloading and installing certbot to request SSL certificate..."
 	if (-not (Test-Path -Path $letsencrypt_dir)) {
-		New-Item -ItemType Directory -Path $letsencrypt_dir
+		New-Item -ItemType Directory -Path $letsencrypt_dir | Out-Null
 	}
 	
 	$certbot_url = "https://github.com/certbot/certbot/releases/download/v2.9.0/certbot-beta-installer-win_amd64_signed.exe"
