@@ -299,7 +299,7 @@ if ($glowroot_enabled -ieq "Y") {
 }
 
 # Adjust permissions
-icacls ${tomcat_install_path} /grant "NT AUTHORITY\LOCAL SERVICE:(OI)(CI)F" /T | Out-Null
+icacls ${tomcat_base_dir} /grant "NT AUTHORITY\LOCAL SERVICE:(OI)(CI)F" /T | Out-Null
 	
 $current_path = Get-Location
 Set-Location ${tomcat_install_path}\bin
