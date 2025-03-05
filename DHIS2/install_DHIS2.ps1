@@ -95,7 +95,6 @@ server.base.url = https://${proxy_hostname}
 server.https = on
 connection.pool.max_idle_time_excess_con = 30
 analytics.table.unlogged = on
-analytics.table.unlogged = on
 monitoring.api.enabled = on
 monitoring.jvm.enabled = on
 monitoring.dbpool.enabled = on
