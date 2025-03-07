@@ -155,7 +155,7 @@ function Configure-PostgreSQL {
     # Create postgresql config files
     $config_pgtune_file = "${pg_install_path}\data\conf.d\00-pgtune.conf"
     $config_pgtune_content = @"
-shared_buffers = $shared_buffers
+shared_buffers = $shared_buffers,
 effective_cache_size = $effective_cache_size
 maintenance_work_mem = $maintenance_work_mem
 work_mem = $work_mem

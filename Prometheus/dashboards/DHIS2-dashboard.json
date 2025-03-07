@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "11.5.2"
+      "version": "11.5.1"
     },
     {
       "type": "datasource",
@@ -74,7 +74,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -134,12 +134,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "hibernate_transactions_total{instance=\"$instance\", result=\"success\"}",
@@ -159,7 +159,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -223,12 +223,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "hibernate_statements_total{application=\"$application\", status=\"prepared\"}",
@@ -248,12 +248,12 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "decimals": 1,
+          "decimals": 0,
           "mappings": [
             {
               "options": {
@@ -284,7 +284,7 @@
         "x": 12,
         "y": 1
       },
-      "id": 107,
+      "id": 114,
       "maxDataPoints": 100,
       "options": {
         "colorMode": "value",
@@ -308,32 +308,36 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "hibernate_optimistic_failures_total",
+          "expr": "increase(hibernate_optimistic_failures_total[$__range])",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "",
           "metric": "",
           "range": true,
           "refId": "A",
-          "step": 14400
+          "step": 14400,
+          "useBackend": false
         }
       ],
-      "title": "Total Optimistic Locking Failures",
+      "title": "Total Optimistic Locking Failures per interval",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -393,12 +397,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "hibernate_query_executions_total",
@@ -418,7 +422,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -478,12 +482,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -507,7 +511,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -571,12 +575,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -600,12 +604,12 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "decimals": 0,
+          "decimals": 1,
           "mappings": [
             {
               "options": {
@@ -636,7 +640,7 @@
         "x": 12,
         "y": 4
       },
-      "id": 114,
+      "id": 107,
       "maxDataPoints": 100,
       "options": {
         "colorMode": "value",
@@ -660,36 +664,32 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
-          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "increase(hibernate_optimistic_failures_total[$__range])",
+          "expr": "hibernate_optimistic_failures_total",
           "format": "time_series",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "",
           "metric": "",
           "range": true,
           "refId": "A",
-          "step": 14400,
-          "useBackend": false
+          "step": 14400
         }
       ],
-      "title": "Total Optimistic Locking Failures per interval",
+      "title": "Total Optimistic Locking Failures",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -749,12 +749,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -778,7 +778,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -857,15 +857,15 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
-          "expr": "rate(hibernate_sessions_open_total{application=\"$application\"}[5m])  ",
+          "expr": "rate(hibernate_sessions_open_total[5m])  ",
           "hide": false,
           "interval": "",
           "legendFormat": "sessions_opened",
@@ -875,7 +875,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_sessions_closed_total{instance=\"$instance\"}[5m])  ",
@@ -888,7 +888,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_flushes_total{instance=\"$instance\"}[5m])  ",
@@ -904,7 +904,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -983,12 +983,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_collections_loads_total{instance=\"$instance\"}[2m])",
@@ -1002,7 +1002,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_collections_updates_total{instance=\"$instance\"}[2m])",
@@ -1015,7 +1015,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_collections_fetches_total{instance=\"$instance\"}[2m])",
@@ -1028,7 +1028,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_collections_deletes_total{instance=\"$instance\"}[2m])",
@@ -1040,7 +1040,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_collections_recreates_total{instance=\"$instance\"}[2m])",
@@ -1056,7 +1056,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1135,12 +1135,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_collections_loads_total{instance=\"$instance\"}[2m])",
@@ -1154,7 +1154,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_entities_updates_total{instance=\"$instance\"}[2m])",
@@ -1167,7 +1167,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_entities_fetches_total{instance=\"$instance\"}[2m])",
@@ -1180,7 +1180,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_entities_deletes_total{instance=\"$instance\"}[2m])",
@@ -1192,7 +1192,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_entities_recreates_total{instance=\"$instance\"}[2m])",
@@ -1204,7 +1204,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "rate(hibernate_entities_inserts_total{instance=\"$instance\"}[2m])",
@@ -1218,7 +1218,7 @@
       "type": "timeseries"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1226,14 +1226,330 @@
         "y": 23
       },
       "id": 18,
-      "panels": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": ""
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 42
+          },
+          "id": 4,
+          "options": {
+            "dataLinks": [],
+            "legend": {
+              "calcs": [
+                "mean",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Max",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": true,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "11.5.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": ""
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "irate(http_server_requests_seconds_count{instance=\"$instance\", uri!~\".*actuator.*|.*metrics.*|REDIRECTION\", status=\"200\"}[5m]) != 0",
+              "format": "time_series",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{method}} [{{status}}] - {{uri}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Success Request Count",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": ""
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 51
+          },
+          "id": 2,
+          "options": {
+            "dataLinks": [],
+            "legend": {
+              "calcs": [
+                "mean",
+                "max",
+                "min"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Mean",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.5.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": ""
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "irate(http_server_requests_seconds_sum{instance=\"$instance\", exception=\"None\", uri!~\".*actuator.*|.*metrics.*\", status=\"200\"}[5m]) / irate(http_server_requests_seconds_count{instance=\"$instance\", exception=\"None\", uri!~\".*actuator.*|.*metrics.*\", status=\"200\"}[5m]) != 0",
+              "format": "time_series",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{method}} [{{status}}] - {{uri}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Success Response Time",
+          "type": "timeseries"
+        }
+      ],
       "title": "HTTP Statistics",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 115,
+      "panels": [],
+      "title": "C3P0",
       "type": "row"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 3,
+        "x": 0,
+        "y": 25
+      },
+      "id": 117,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 100
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "jdbc_connections_min{name=\"dataSource\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "Min Connections",
+          "range": true,
+          "refId": "A",
+          "useBackend": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": ""
+          }
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": ""
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "jdbc_connections_max{name=\"dataSource\"}",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "legendFormat": "Max Connections",
+          "range": true,
+          "refId": "B",
+          "useBackend": false
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1278,7 +1594,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1286,136 +1603,24 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "short"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 24
+        "h": 8,
+        "w": 21,
+        "x": 3,
+        "y": 25
       },
-      "id": 4,
+      "id": 116,
       "options": {
         "dataLinks": [],
         "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Max",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "hideZeros": true,
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "11.5.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "irate(http_server_requests_seconds_count{instance=\"$instance\", uri!~\".*actuator.*|.*metrics.*|REDIRECTION\", status=\"200\"}[5m])",
-          "format": "time_series",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "intervalFactor": 1,
-          "legendFormat": "{{method}} [{{status}}] - {{uri}}",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Success Request Count",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 33
-      },
-      "id": 2,
-      "options": {
-        "dataLinks": [],
-        "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "min"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Mean",
-          "sortDesc": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -1423,27 +1628,36 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
-          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "irate(http_server_requests_seconds_sum{instance=\"$instance\", exception=\"None\", uri!~\".*actuator.*|.*metrics.*\", status=\"200\"}[5m]) / irate(http_server_requests_seconds_count{instance=\"$instance\", exception=\"None\", uri!~\".*actuator.*|.*metrics.*\", status=\"200\"}[5m])",
-          "format": "time_series",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "intervalFactor": 1,
-          "legendFormat": "{{method}} [{{status}}] - {{uri}}",
+          "expr": "rate(jdbc_connections_idle[5m])  ",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Idle Connections {{name}}",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": ""
+          },
+          "editorMode": "code",
+          "expr": "rate(jdbc_connections_active[5m])  ",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Active Connections {{name}}",
+          "range": true,
+          "refId": "C"
         }
       ],
-      "title": "Success Response Time",
+      "title": "C3P0 Connections",
       "type": "timeseries"
     }
   ],
@@ -1460,7 +1674,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "uid": ""
         },
         "definition": "label_values(jvm_classes_loaded_classes,instance)",
         "includeAll": false,
@@ -1499,6 +1713,6 @@
   "timezone": "",
   "title": "DHIS2",
   "uid": "aeeuxv61z84jka",
-  "version": 7,
+  "version": 10,
   "weekStart": ""
 }

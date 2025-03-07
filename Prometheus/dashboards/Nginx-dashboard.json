@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "11.5.2"
+      "version": "11.5.1"
     },
     {
       "type": "panel",
@@ -81,7 +81,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -150,14 +150,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "repeat": "instance",
       "repeatDirection": "h",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -191,7 +191,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -271,12 +271,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "irate(nginx_connections_accepted[5m])",
@@ -289,7 +289,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "irate(nginx_connections_handled[5m])",
@@ -306,7 +306,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -385,12 +385,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "nginx_connections_active",
@@ -403,7 +403,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "nginx_connections_reading",
@@ -416,7 +416,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "nginx_connections_waiting",
@@ -429,7 +429,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "nginx_connections_writing",
@@ -446,7 +446,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -524,12 +524,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "irate(nginx_http_requests_total[5m])",
@@ -559,7 +559,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -635,12 +635,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -663,7 +663,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -744,12 +744,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -770,7 +770,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -795,7 +795,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -889,12 +889,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -917,7 +917,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "description": "Response sizes in bytes",
       "fieldConfig": {
@@ -996,12 +996,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -1024,7 +1024,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1078,13 +1078,13 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(method) (increase(nginx_http_response_count_total[$__range]))",
+          "expr": "sum by(method) (increase(nginx_http_response_count_total{method=~\"GET|PUT|POST|HEAD|DELETE|CONNECT|PATCH|TRACE\"}[$__range]))",
           "format": "time_series",
           "fullMetaSearch": false,
           "hide": false,
@@ -1096,7 +1096,7 @@
           "useBackend": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": ""
           }
         }
       ],
