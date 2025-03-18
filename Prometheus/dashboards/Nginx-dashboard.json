@@ -1084,7 +1084,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(method) (increase(nginx_http_response_count_total{method=~\"GET|PUT|POST|HEAD|DELETE|CONNECT|PATCH|TRACE\"}[$__range]))",
+          "expr": "sum by(method) (increase(nginx_http_response_count_total{method=~\"GET|POST|PUT|DELETE|HEAD|CONNECT|OPTIONS|TRACE|PATCH\"}[$__range]))",
           "format": "time_series",
           "fullMetaSearch": false,
           "hide": false,
