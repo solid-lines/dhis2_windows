@@ -1,47 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "11.5.1"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -61,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 41,
   "links": [],
   "panels": [
     {
@@ -80,8 +37,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "PostgreSQL version",
       "fieldConfig": {
         "defaults": {
           "mappings": [
@@ -137,12 +95,12 @@
         "textMode": "name",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "pg_static{instance=\"$instance\"}",
@@ -159,7 +117,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -216,27 +174,27 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "expr": "SUM(pg_stat_database_tup_fetched{datname=~\"$datname\", instance=~\"$instance\"})",
+          "expr": "sum(pg_stat_database_tup_fetched{datname=\"$datname\", instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "refId": "A",
           "step": 4
         }
       ],
-      "title": "Current fetch data",
+      "title": "Current Fetch Data",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -257,14 +215,10 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
-          "unit": "short"
+          "unit": "decbytes"
         },
         "overrides": []
       },
@@ -293,15 +247,15 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
-          "expr": "SUM(pg_stat_database_tup_inserted{datname=~\"$datname\", instance=~\"$instance\"})",
+          "expr": "sum(pg_stat_database_tup_inserted{datname=\"$datname\", instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "range": true,
@@ -309,13 +263,13 @@
           "step": 4
         }
       ],
-      "title": "Current insert data",
+      "title": "Current Insert Data",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -343,7 +297,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "decbytes"
         },
         "overrides": []
       },
@@ -372,27 +326,27 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "expr": "SUM(pg_stat_database_tup_updated{datname=~\"$datname\", instance=~\"$instance\"})",
+          "expr": "sum(pg_stat_database_tup_updated{datname=\"$datname\", instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "refId": "A",
           "step": 4
         }
       ],
-      "title": "Current update data",
+      "title": "Current Update Data",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "description": "Average user and system CPU time spent in seconds.",
       "fieldConfig": {
@@ -417,7 +371,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -477,12 +431,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "avg(rate(process_cpu_seconds_total{instance=\"$instance\"}[5m]) * 1000)",
@@ -499,7 +453,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "description": "Virtual and Resident memory size in bytes, averages over 5 min interval",
       "fieldConfig": {
@@ -524,7 +478,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
             },
@@ -583,12 +537,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -603,7 +557,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "avg(rate(process_virtual_memory_bytes{instance=\"$instance\"}[5m]))",
@@ -620,7 +574,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "description": "Number of open file descriptors",
       "fieldConfig": {
@@ -645,7 +599,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -705,20 +659,24 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "editorMode": "code",
-          "expr": "process_open_fds{instance=\"$instance\"}",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum(process_open_fds{instance=\"$instance\"})",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "intervalFactor": 2,
           "legendFormat": "Open FD",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Open File Descriptors",
@@ -740,7 +698,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -797,12 +755,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "pg_settings_max_connections{instance=\"$instance\"}",
@@ -818,7 +776,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -875,12 +833,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_shared_buffers_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -894,7 +852,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -951,12 +909,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_effective_cache_size_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -970,7 +928,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1027,12 +985,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_work_mem_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -1047,7 +1005,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1104,12 +1062,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_maintenance_work_mem_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -1123,7 +1081,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1180,12 +1138,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_max_parallel_workers{instance=\"$instance\"}",
           "format": "time_series",
@@ -1199,7 +1157,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1256,12 +1214,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_max_worker_processes{instance=\"$instance\"}",
           "format": "time_series",
@@ -1275,7 +1233,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1332,12 +1290,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_seq_page_cost{instance=\"$instance\"}",
           "format": "time_series",
@@ -1351,7 +1309,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1408,12 +1366,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_random_page_cost{instance=\"$instance\"}",
           "format": "time_series",
@@ -1427,7 +1385,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1480,12 +1438,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "pg_settings_min_wal_size_bytes{instance=\"$instance\"}",
@@ -1501,7 +1459,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1559,12 +1517,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "expr": "pg_settings_max_wal_size_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -1578,7 +1536,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -1631,12 +1589,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "pg_settings_wal_buffers_bytes{instance=\"$instance\"}",
@@ -1665,8 +1623,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Number of connections per state",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1689,7 +1648,10 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 1,
             "scaleDistribution": {
@@ -1742,17 +1704,17 @@
           "sortDesc": true
         },
         "tooltip": {
-          "hideZeros": false,
+          "hideZeros": true,
           "mode": "multi",
-          "sort": "none"
+          "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1765,7 +1727,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{datname}}, {{state}}",
+          "legendFormat": "{{datname}} - {{state}}",
           "range": true,
           "refId": "A",
           "step": 2,
@@ -1778,8 +1740,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Number of transactions that have been commited or rollbacked",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1802,7 +1765,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -1857,33 +1820,43 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "editorMode": "code",
-          "expr": "sum(rate(pg_stat_database_xact_commit{instance=\"$instance\", datname=~\"$datname\"}[1m]))",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum(rate(pg_stat_database_xact_commit{instance=\"$instance\", datname=\"$datname\"}[1m]))",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
           "intervalFactor": 1,
-          "legendFormat": "{{datname}} commits",
+          "legendFormat": "$datname - commits",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "editorMode": "code",
-          "expr": "sum(rate(pg_stat_database_xact_rollback{instance=\"$instance\", datname=~\"$datname\"}[1m]))",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum(rate(pg_stat_database_xact_rollback{instance=\"$instance\", datname=\"$datname\"}[1m]))",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
           "intervalFactor": 1,
-          "legendFormat": "{{datname}} rollbacks",
+          "legendFormat": "$datname - rollbacks",
           "range": true,
-          "refId": "B"
+          "refId": "B",
+          "useBackend": false
         }
       ],
       "title": "Transactions",
@@ -1892,8 +1865,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Transactions rate in database",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1950,12 +1924,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "dsType": "prometheus",
           "editorMode": "code",
@@ -2018,8 +1992,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Tuples fetched per second",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2042,7 +2017,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -2097,31 +2072,36 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(irate(pg_stat_database_tup_fetched{datname=~\"$datname\",instance=~\"$instance\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_fetched{datname=~\"$datname\", instance=~\"$instance\"}[1m]))",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "intervalFactor": 1,
           "legendFormat": "$datname",
           "range": true,
           "refId": "A",
-          "step": 2
+          "step": 2,
+          "useBackend": false
         }
       ],
-      "title": "Fetch data (SELECT)",
+      "title": "Fetch data (Select)",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Tuples inserted per second",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2144,7 +2124,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -2199,15 +2179,15 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
-          "expr": "sum(irate(pg_stat_database_tup_inserted{datname=~\"$datname\",instance=~\"$instance\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_inserted{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "$datname",
@@ -2222,8 +2202,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Tuples updated per second",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2246,7 +2227,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -2301,15 +2282,15 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
-          "expr": "sum(irate(pg_stat_database_tup_updated{datname=~\"$datname\",instance=~\"$instance\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_updated{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "$datname",
@@ -2324,8 +2305,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Tuples returned per second",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2348,7 +2330,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -2403,15 +2385,15 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
-          "expr": "sum(irate(pg_stat_database_tup_returned{datname=~\"$datname\",instance=~\"$instance\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_returned{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "$datname",
@@ -2426,8 +2408,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Tuples deleted per second",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2450,7 +2433,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -2505,15 +2488,15 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
-          "expr": "sum(irate(pg_stat_database_tup_deleted{datname=~\"$datname\",instance=~\"$instance\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_deleted{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "$datname",
@@ -2528,8 +2511,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "PostgreSQL Cache Hit Rate",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2552,7 +2536,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
@@ -2606,12 +2590,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "sum(pg_stat_database_blks_hit{datname=~\"$datname\",instance=~\"$instance\"}) / (sum(pg_stat_database_blks_hit{datname=~\"$datname\",instance=~\"$instance\"}) + sum(pg_stat_database_blks_read{datname=~\"$datname\",instance=~\"$instance\"}))",
@@ -2628,8 +2612,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
+      "description": "Buffers metrics",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2652,7 +2637,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
             },
@@ -2710,70 +2695,70 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_backend_total{instance=\"$instance\"}[5m]) != 0",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "buffers_backend",
+          "legendFormat": "$datname - buffers_backend",
           "range": true,
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_alloc_total{instance=\"$instance\"}[5m]) != 0",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "buffers_alloc",
+          "legendFormat": "$datname - buffers_alloc",
           "range": true,
           "refId": "B"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_backend_fsync_total{instance=\"$instance\"}[5m]) != 0",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "backend_fsync",
+          "legendFormat": "$datname backend_fsync",
           "range": true,
           "refId": "C"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_checkpoint_total{instance=\"$instance\"}[5m]) != 0",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "buffers_checkpoint",
+          "legendFormat": "$datname - buffers_checkpoint",
           "range": true,
           "refId": "D"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_clean_total{instance=\"$instance\"}[5m]) != 0",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "buffers_clean",
+          "legendFormat": "$datname - buffers_clean",
           "range": true,
           "refId": "E"
         }
@@ -2784,7 +2769,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "description": "Total amount of data written to temporary files by queries in this database. All temporary files are counted, regardless of why the temporary file was created, and regardless of the log_temp_files setting.",
       "fieldConfig": {
@@ -2809,7 +2794,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -2833,10 +2818,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -2868,18 +2849,25 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "expr": "irate(pg_stat_database_temp_bytes{instance=\"$instance\", datname=~\"$datname\"}[5m])",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "irate(pg_stat_database_temp_bytes{datname=\"$datname\", instance=\"$instance\", datid=\"319542\"}[5m])",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "{{datname}}",
-          "refId": "A"
+          "legendFormat": "$datname",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Temp File (Bytes)",
@@ -2888,7 +2876,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -2912,7 +2900,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -2969,22 +2957,26 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "editorMode": "code",
+          "disableTextWrap": false,
+          "editorMode": "builder",
           "exemplar": false,
           "expr": "pg_locks_count{datname=~\"$datname\", instance=~\"$instance\"} != 0",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "intervalFactor": 1,
-          "legendFormat": "{{datname}},{{mode}}",
+          "legendFormat": "{{datname}} - {{mode}}",
           "range": true,
           "refId": "A",
-          "step": 2
+          "step": 2,
+          "useBackend": false
         }
       ],
       "title": "Lock tables",
@@ -2993,7 +2985,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -3017,7 +3009,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -3073,18 +3065,18 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "pg_database_size_bytes{datname=~\"$datname\",instance=~\"$instance\"}",
-          "legendFormat": "$datname, Database Size",
-          "range": true,
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
-            "uid": ""
-          }
+            "uid": "prometheusds"
+          },
+          "editorMode": "code",
+          "expr": "pg_database_size_bytes{datname=~\"$datname\",instance=~\"$instance\"}",
+          "legendFormat": "$datname",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Database Size",
@@ -3093,7 +3085,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -3117,7 +3109,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -3176,31 +3168,41 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "editorMode": "code",
+          "disableTextWrap": false,
+          "editorMode": "builder",
           "expr": "irate(pg_stat_bgwriter_checkpoint_write_time_total{instance=\"$instance\"}[5m])",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "intervalFactor": 1,
-          "legendFormat": "write_time - Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk.",
+          "legendFormat": "$datname - write_time",
           "range": true,
-          "refId": "B"
+          "refId": "B",
+          "useBackend": false
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
+          "disableTextWrap": false,
+          "editorMode": "builder",
           "expr": "irate(pg_stat_bgwriter_checkpoint_sync_time_total{instance=\"$instance\"}[5m])",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "intervalFactor": 1,
-          "legendFormat": "sync_time - Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk.",
-          "refId": "A"
+          "legendFormat": "$datname - sync_time",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Checkpoint Stats",
@@ -3209,7 +3211,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -3233,7 +3235,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -3292,29 +3294,41 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "expr": "irate(pg_stat_database_conflicts{instance=\"$instance\", datname=~\"$datname\"}[5m])",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(datname) (irate(pg_stat_database_conflicts{instance=\"$instance\", datname=~\"$datname\"}[5m]))",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "intervalFactor": 1,
-          "legendFormat": "{{datname}} conflicts",
-          "refId": "B"
+          "legendFormat": "{{datname}} - conflicts",
+          "range": true,
+          "refId": "B",
+          "useBackend": false
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": ""
+            "uid": "prometheusds"
           },
-          "expr": "irate(pg_stat_database_deadlocks{instance=\"$instance\", datname=~\"$datname\"}[5m])",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum by(datname) (irate(pg_stat_database_deadlocks{instance=\"$instance\", datname=~\"$datname\"}[5m]))",
           "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "intervalFactor": 1,
-          "legendFormat": "{{datname}} deadlocks",
-          "refId": "A"
+          "legendFormat": "{{datname}} - deadlocks",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Conflicts/Deadlocks",
@@ -3336,21 +3350,45 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
           "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto",
-              "wrapText": false
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
             },
-            "filterable": true,
-            "inspect": false
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -3359,264 +3397,64 @@
               {
                 "color": "green",
                 "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Database"
-            },
-            "properties": [
+              },
               {
-                "id": "custom.width",
-                "value": 100
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "User"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 70
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Query"
-            },
-            "properties": [
-              {
-                "id": "custom.width"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Calls"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
+                "color": "red",
                 "value": 80
               }
             ]
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Calls (max)"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
-              }
-            ]
-          }
-        ]
+          "unit": "ms"
+        },
+        "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 24,
         "x": 0,
         "y": 53
       },
-      "id": 73,
+      "id": 80,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": true,
-          "fields": "",
-          "reducer": [
-            "sum"
+        "legend": {
+          "calcs": [
+            "mean"
           ],
-          "show": false
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Calls"
-          }
-        ]
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "increase(pg_stat_statements_calls_total[$__range])",
-          "format": "table",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false,
           "datasource": {
             "type": "prometheus",
-            "uid": ""
-          }
+            "uid": "prometheusds"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(rate(pg_stat_statements_total_time{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "$datname",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Top 20 Query Calls by interval",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "instance": true,
-              "job": true,
-              "queryid": true,
-              "server": true
-            },
-            "includeByName": {},
-            "indexByName": {
-              "Time": 0,
-              "Value": 8,
-              "__name__": 1,
-              "datname": 2,
-              "instance": 5,
-              "job": 6,
-              "query": 4,
-              "rolname": 3,
-              "server": 7
-            },
-            "renameByName": {
-              "Value": "Calls",
-              "datname": "Database",
-              "query": "Query",
-              "rolname": "User"
-            }
-          }
-        },
-        {
-          "id": "groupBy",
-          "options": {
-            "fields": {
-              "Calls": {
-                "aggregations": [
-                  "max"
-                ],
-                "operation": "aggregate"
-              },
-              "Database": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "Query": {
-                "aggregations": [
-                  "last"
-                ],
-                "operation": "groupby"
-              },
-              "User": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "Value": {
-                "aggregations": [
-                  "diff"
-                ],
-                "operation": "aggregate"
-              },
-              "datname": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "query": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "rolname": {
-                "aggregations": [],
-                "operation": "groupby"
-              }
-            }
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "Calls (max)"
-              }
-            ]
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Calls",
-            "binary": {
-              "left": {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Calls (diff)"
-                }
-              },
-              "right": {
-                "fixed": ""
-              }
-            },
-            "mode": "unary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false,
-            "unary": {
-              "fieldName": "Calls (max)",
-              "operator": "floor"
-            }
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "greater",
-                  "options": {
-                    "value": 0
-                  }
-                },
-                "fieldName": "Calls"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
-        },
-        {
-          "id": "limit",
-          "options": {
-            "limitField": "20"
-          }
-        }
-      ],
-      "type": "table"
+      "title": "Mean Query Time",
+      "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -3686,7 +3524,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 62
+        "y": 61
       },
       "id": 74,
       "options": {
@@ -3704,55 +3542,68 @@
         "sortBy": [
           {
             "desc": true,
-            "displayName": "Value"
+            "displayName": "Time"
           }
         ]
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusds"
+          },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "increase(pg_stat_statements_total_time[$__range]) / increase(pg_stat_statements_calls_total[$__range])\r\n",
+          "exemplar": false,
+          "expr": "sum by (datname, rolname, query) (\r\n  increase(pg_stat_statements_total_time{instance=\"$instance\", datname=\"$datname\"}[$__range])\r\n) / (ceil(\r\n  sum by (datname, rolname, query) (\r\n    increase(pg_stat_statements_calls_total{instance=\"$instance\", datname=\"$datname\"}[$__range]) > 0\r\n  )))",
           "format": "table",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
+          "instant": true,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
-          "useBackend": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": ""
-          }
+          "useBackend": false
         }
       ],
       "title": "Top 20 Query Duration by interval",
       "transformations": [
         {
-          "id": "groupBy",
+          "id": "filterByValue",
           "options": {
-            "fields": {
-              "Value": {
-                "aggregations": [
-                  "max"
-                ],
-                "operation": "aggregate"
-              },
-              "datname": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "query": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "rolname": {
-                "aggregations": [],
-                "operation": "groupby"
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value"
               }
-            }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value"
+              }
+            ]
+          }
+        },
+        {
+          "id": "limit",
+          "options": {
+            "limitField": "20"
           }
         },
         {
@@ -3773,6 +3624,7 @@
               "rolname": 1
             },
             "renameByName": {
+              "Value": "Avg Duration (ms)",
               "Value (max)": "Avg Duration (ms)",
               "Value (mean)": "Avg Time (ms)",
               "datname": "Database",
@@ -3780,42 +3632,6 @@
               "rolname": "User"
             }
           }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "Avg Duration (ms)"
-              }
-            ]
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "greater",
-                  "options": {
-                    "value": 0
-                  }
-                },
-                "fieldName": "Avg Duration (ms)"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
-        },
-        {
-          "id": "limit",
-          "options": {
-            "limitField": "20"
-          }
         }
       ],
       "type": "table"
@@ -3823,248 +3639,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": ""
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto",
-              "wrapText": false
-            },
-            "filterable": true,
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Database"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 100
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "User"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 70
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Avg Time (ms)"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 150
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 71
-      },
-      "id": 75,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": true,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Time (ms) (diff)"
-          }
-        ]
-      },
-      "pluginVersion": "11.5.1",
-      "targets": [
-        {
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "pg_stat_statements_blk_read_time",
-          "format": "table",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": ""
-          }
-        }
-      ],
-      "title": "Top 20 Query Blocks Read Time by interval",
-      "transformations": [
-        {
-          "id": "groupBy",
-          "options": {
-            "fields": {
-              "Database": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "Query": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "Time (ms)": {
-                "aggregations": [
-                  "diff"
-                ],
-                "operation": "aggregate"
-              },
-              "User": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "Value": {
-                "aggregations": [
-                  "diff"
-                ],
-                "operation": "aggregate"
-              },
-              "datname": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "query": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "rolname": {
-                "aggregations": [],
-                "operation": "groupby"
-              }
-            }
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "Value (diff)"
-              }
-            ]
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Time (ms)",
-            "mode": "unary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "unary": {
-              "fieldName": "Value (diff)",
-              "operator": "abs"
-            }
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "greater",
-                  "options": {
-                    "value": 0
-                  }
-                },
-                "fieldName": "Time (ms)"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
-        },
-        {
-          "id": "limit",
-          "options": {
-            "limitField": "20"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Value": false,
-              "Value (diff)": true
-            },
-            "includeByName": {},
-            "indexByName": {
-              "Time": 0,
-              "Value": 9,
-              "__name__": 1,
-              "datname": 2,
-              "instance": 3,
-              "job": 4,
-              "query": 6,
-              "queryid": 7,
-              "rolname": 5,
-              "server": 8
-            },
-            "renameByName": {
-              "Value": "Time (ms)",
-              "datname": "Database",
-              "query": "Query",
-              "rolname": "User"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": ""
+        "uid": "prometheusds"
       },
       "fieldConfig": {
         "defaults": {
@@ -4118,7 +3693,207 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Avg Time (ms)"
+              "options": "Query"
+            },
+            "properties": [
+              {
+                "id": "custom.width"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Calls"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 70
+      },
+      "id": 73,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Calls"
+          }
+        ]
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusds"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "ceil(\r\n  sum by (datname, rolname, query) (\r\n    increase(pg_stat_statements_calls_total{instance=\"$instance\", datname=\"$datname\"}[$__range])\r\n  ))",
+          "format": "table",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Top 20 Query Calls by interval",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value"
+              }
+            ]
+          }
+        },
+        {
+          "id": "limit",
+          "options": {
+            "limitField": "20"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value (max)": false,
+              "instance": true,
+              "job": true,
+              "queryid": true,
+              "server": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "Value": 8,
+              "__name__": 1,
+              "datname": 2,
+              "instance": 5,
+              "job": 6,
+              "query": 4,
+              "rolname": 3,
+              "server": 7
+            },
+            "renameByName": {
+              "Value": "Calls",
+              "Value (max)": "Calls",
+              "datname": "Database",
+              "query": "Query",
+              "rolname": "User"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusds"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto",
+              "wrapText": false
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Database"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "User"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time (ms)"
             },
             "properties": [
               {
@@ -4133,9 +3908,9 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 80
+        "y": 79
       },
-      "id": 76,
+      "id": 75,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -4155,97 +3930,30 @@
           }
         ]
       },
-      "pluginVersion": "11.5.1",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusds"
+          },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "pg_stat_statements_blk_write_time",
+          "exemplar": false,
+          "expr": "sum by (datname, rolname, query) (\r\n  increase(pg_stat_statements_blk_read_time{instance=\"$instance\", datname=\"$datname\"}[$__range])\r\n)",
           "format": "table",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
+          "instant": true,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
-          "useBackend": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": ""
-          }
+          "useBackend": false
         }
       ],
-      "title": "Top 20 Query Blocks Write Time by interval",
+      "title": "Top 20 Query Blocks Read Time by interval",
       "transformations": [
-        {
-          "id": "groupBy",
-          "options": {
-            "fields": {
-              "Database": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "Query": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "Time (ms)": {
-                "aggregations": [
-                  "diff"
-                ],
-                "operation": "aggregate"
-              },
-              "User": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "Value": {
-                "aggregations": [
-                  "diff"
-                ],
-                "operation": "aggregate"
-              },
-              "datname": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "query": {
-                "aggregations": [],
-                "operation": "groupby"
-              },
-              "rolname": {
-                "aggregations": [],
-                "operation": "groupby"
-              }
-            }
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "Value (diff)"
-              }
-            ]
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Time (ms)",
-            "mode": "unary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "unary": {
-              "fieldName": "Value (diff)",
-              "operator": "abs"
-            }
-          }
-        },
         {
           "id": "filterByValue",
           "options": {
@@ -4257,11 +3965,23 @@
                     "value": 0
                   }
                 },
-                "fieldName": "Time (ms)"
+                "fieldName": "Value"
               }
             ],
             "match": "any",
             "type": "include"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value"
+              }
+            ]
           }
         },
         {
@@ -4274,8 +3994,9 @@
           "id": "organize",
           "options": {
             "excludeByName": {
+              "Time": true,
               "Value": false,
-              "Value (diff)": true
+              "Value (diff)": false
             },
             "includeByName": {},
             "indexByName": {
@@ -4292,6 +4013,194 @@
             },
             "renameByName": {
               "Value": "Time (ms)",
+              "Value (diff)": "Time (ms)",
+              "datname": "Database",
+              "query": "Query",
+              "rolname": "User"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusds"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto",
+              "wrapText": false
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Database"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "User"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 88
+      },
+      "id": 82,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time (ms) (diff)"
+          }
+        ]
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusds"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (datname, rolname, query) (\r\n  increase(pg_stat_statements_blk_write_time{instance=\"$instance\", datname=\"$datname\"}[$__range])\r\n)",
+          "format": "table",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Top 20 Query Blocks Write Time by interval",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value"
+              }
+            ]
+          }
+        },
+        {
+          "id": "limit",
+          "options": {
+            "limitField": "20"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": false,
+              "Value (diff)": false
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "Value": 9,
+              "__name__": 1,
+              "datname": 2,
+              "instance": 3,
+              "job": 4,
+              "query": 6,
+              "queryid": 7,
+              "rolname": 5,
+              "server": 8
+            },
+            "renameByName": {
+              "Value": "Time (ms)",
+              "Value (diff)": "Time (ms)",
               "datname": "Database",
               "query": "Query",
               "rolname": "User"
@@ -4302,6 +4211,7 @@
       "type": "table"
     }
   ],
+  "preload": false,
   "refresh": "30s",
   "schemaVersion": 40,
   "tags": [
@@ -4312,7 +4222,10 @@
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "text": "base.paho-training.solidlines.io",
+          "value": "base.paho-training.solidlines.io"
+        },
         "definition": "label_values(pg_up,instance)",
         "label": "Instance",
         "name": "instance",
@@ -4327,10 +4240,17 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": [
+            "dhis2"
+          ],
+          "value": [
+            "dhis2"
+          ]
+        },
         "datasource": {
           "type": "prometheus",
-          "uid": ""
+          "uid": "prometheusds"
         },
         "definition": "label_values(pg_database_size_bytes{datname!~\"template.*|postgres\"},datname)",
         "includeAll": true,
@@ -4355,9 +4275,9 @@
     "to": "now"
   },
   "timepicker": {},
-  "timezone": "",
+  "timezone": "browser",
   "title": "PostgreSQL Database",
-  "uid": "000000039",
-  "version": 13,
+  "uid": "DHIS2-PostgreSL-Dashboard",
+  "version": 3,
   "weekStart": ""
 }
