@@ -22,7 +22,7 @@ $nginx_prometheus_exporter_version = "1.4.1"
 
 # Install postgres exporter v0.16.0
 function Install-postgres_exporter {
-	Write-Host "Installing postgres_exporter v${postgres_exporter_version}"
+	Write-Log "Installing postgres_exporter v${postgres_exporter_version}" -Level INFO
 	$pgExporterZipFile = ".\Prometheus\postgres_exporter\postgres_exporter-${postgres_exporter_version}.zip"
 	$pgExporterInstallPath = "${prometheus_base_install_path}\postgres_exporter"
 	$pgExporterFile = "${pgExporterInstallPath}\postgres_exporter.exe"
@@ -47,12 +47,12 @@ function Install-postgres_exporter {
 	# Start postgres_exporter service
 	Start-Service -Name $pgExporterServiceName
 	
-	Write-Host "postgres_exporter installed and running http://localhost:9187/metrics"
+	Write-Log "postgres_exporter installed and running http://localhost:9187/metrics" -Level INFO
 }
 
 # Install windows_exporter v0.30.4
 function Install-windows_exporter {
-Write-Host "Installing windows_exporter v${windows_exporter_version}"
+	Write-Log "Installing windows_exporter v${windows_exporter_version}" -Level INFO
 	$windowsExporterZipFile = ".\Prometheus\windows_exporter\windows_exporter-${windows_exporter_version}.zip"
 	$windowsExporterInstallPath = "${prometheus_base_install_path}\windows_exporter"
 	$windowsExporterFile = "${windowsExporterInstallPath}\windows_exporter.exe"
@@ -76,12 +76,12 @@ Write-Host "Installing windows_exporter v${windows_exporter_version}"
 	# Start windows_exporter service
 	Start-Service -Name $windowsExporterServiceName
 
-	Write-Host "windows_exporter installed and running  http://localhost:9182/metrics"
+	Write-Log "windows_exporter installed and running  http://localhost:9182/metrics" -Level INFO
 }
 
 # Install nginx-prometheus-exporter v1.4.1
 function Install-nginx-prometheus-exporter {
-	Write-Host "Installing nginx-prometheus-exporter v${nginx_prometheus_exporter_version}"
+	Write-Log "Installing nginx-prometheus-exporter v${nginx_prometheus_exporter_version}" -Level INFO
 	$nginxExporterZipFile = ".\Prometheus\nginx-prometheus-exporter\nginx-prometheus-exporter-${nginx_prometheus_exporter_version}.zip"
 	$nginxExporterInstallPath = "${prometheus_base_install_path}\nginx-prometheus-exporter"
 	$nginxExporterFile = "${nginxExporterInstallPath}\nginx-prometheus-exporter.exe"
@@ -105,12 +105,12 @@ function Install-nginx-prometheus-exporter {
 	# Start nginx-prometheus-exporter service
 	Start-Service -Name $nginxExporterServiceName
 
-	Write-Host "nginx-prometheus-exporter installed and running  http://localhost:9113/metrics"
+	Write-Log "nginx-prometheus-exporter installed and running  http://localhost:9113/metrics" -Level INFO
 }
 
 # Install nginx-log-exporter (compiled windows versoin from https://github.com/songjiayang/nginx-log-exporter)
 function Install-nginx-log-exporter {
-	Write-Host "Installing nginx-log-exporter"
+	Write-Log "Installing nginx-log-exporter" -Level INFO
 	$nginxLogExporterZipFile = ".\Prometheus\nginx-log-exporter\nginx-log-exporter.zip"
 	$nginxLogExporterInstallPath = "${prometheus_base_install_path}\nginx-log-exporter"
 	$nginxLogExporterFile = "${nginxLogExporterInstallPath}\nginx-log-exporter.exe"
@@ -164,12 +164,12 @@ function Install-nginx-log-exporter {
 	# Start nginx exporter service
 	Start-Service -Name $nginxLogExporterServiceName
 
-	Write-Host "nginx-prometheus-exporter installed and running  http://localhost:9999/metrics"
+	Write-Log "nginx-prometheus-exporter installed and running  http://localhost:9999/metrics" -Level INFO
 }
 
 function Install-Prometheus {
-	Write-Host "Installing Prometheus v${prometheus_version}"
-	Write-Host "*** Please, remember to modify credentials to access DHIS2 in prometheus.yml config file"
+	Write-Log "Installing Prometheus v${prometheus_version}" -Level INFO
+	Write-Log "*** Please, remember to modify credentials to access DHIS2 in prometheus.yml config file" -Level INFO
 	$prometheusUrl = "https://github.com/prometheus/prometheus/releases/download/v${prometheus_version}/prometheus-${prometheus_version}.windows-amd64.zip"
 	$prometheusZip = "prometheus.zip"
 	$prometheusInstallPath = "${prometheus_base_install_path}\Prometheus"
@@ -180,7 +180,7 @@ function Install-Prometheus {
 	}
 
 	# Download and unzip prometheus
-	Invoke-WebRequest -Uri $prometheusUrl -OutFile $prometheusZip
+	Invoke-WebRequest -Uri $prometheusUrl -OutFile $prometheusZip -UseBasicParsing -ErrorAction Stop
 	Expand-Archive -Path $prometheusZip -DestinationPath $prometheus_base_install_path -Force | Out-Null
 	Move-Item -Path "${prometheus_base_install_path}\prometheus-${prometheus_version}.windows-amd64" -NewName "${prometheusInstallPath}" -Force
 	
@@ -228,7 +228,7 @@ scrape_configs:
 	# Start Prometheus service
 	Start-Service -Name $prometheusServiceName
 	
-	Write-Host "Prometheus running http://localhost:9090"
+	Write-Log "Prometheus running http://localhost:9090" -Level INFO
 }
 
 # Install Grafana
@@ -244,7 +244,7 @@ function Install-Grafana {
 	#}
 
 	# Download and unzip Grafana
-	Invoke-WebRequest -Uri $grafanaUrl -OutFile $grafanaZip
+	Invoke-WebRequest -Uri $grafanaUrl -OutFile $grafanaZip -UseBasicParsing -ErrorAction Stop
 	Expand-Archive -Path $grafanaZip -DestinationPath $grafana_base_path -Force | Out-Null
 
 	Move-Item -Path "C:\Program Files\grafana-v${grafana_version}" -NewName "${grafanaInstallPath}" -Force
@@ -302,14 +302,14 @@ providers:
 	Restart-Service -Name $grafanaServiceName
 	Start-Sleep -Seconds 5
 
-	Write-Host "Grafana installed and running http://localhost:3000 (https://${proxy_hostname}/grafana" 
+	Write-Log "Grafana installed and running http://localhost:3000 (https://${proxy_hostname}/grafana" -Level INFO
 }
 
 #######################
 # Script
 #######################
 
-Write-Host "Init Prometheus v${prometheus_version} and Grafana v${grafana_version} installation..."
+Write-Log "Init Prometheus v${prometheus_version} and Grafana v${grafana_version} installation..." -Level INFO
 
 Install-Prometheus
 Install-windows_exporter
@@ -318,4 +318,4 @@ Install-nginx-prometheus-exporter
 Install-nginx-log-exporter
 Install-Grafana
 
-Write-Host "Prometheus and Grafana installed and configured successfully"
+Write-Log "Prometheus and Grafana installed and configured successfully" -Level INFO

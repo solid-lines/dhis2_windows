@@ -9,14 +9,14 @@
 	"xmx": "4096",
 	"xms": "2048",
 	"username": "admin",
-	"password": "XXXXX"
+	"password": "changeme"
   },
   "monitoring": {
     "glowroot": {
       "enabled": "Y",
       "version": "0.14.2",
       "username": "admin",
-      "password": "XXXXX"
+      "password": "changeme"
     },
     "prometheus_grafana": {
       "enabled": "Y",
@@ -28,7 +28,7 @@
     "version": "16",
 	"host": "localhost",
 	"username": "postgres",
-	"password": "postgres",
+	"password": "changeme",
 	"service_name": "Postgres16",
 	"max_connections": "80",
 	"memory": "10",
@@ -42,12 +42,12 @@
 	"path": "ROOT",
 	"db_name": "dhis2",
 	"db_username": "dhis",
-	"db_password": "XXXXX"
+	"db_password": "changeme"
   },
   "proxy": {
 	  "name": "nginx",
 	  "service_name": "Nginx",
-	  "version": "1.26.3",
-	  "hostname": "dhis2-windows.solidlines.io"
+	  "version": "1.28.1",
+	  "hostname": "windows.dhis2..solidlines.io"
   }
 }

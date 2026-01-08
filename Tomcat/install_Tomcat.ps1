@@ -44,39 +44,39 @@ function Check-UrlExists {
 
 # Check if Tomcat can be downloaded from dlcdn on the main server or is an archived version
 function Download-Tomcat {
-    Write-Host "Downloading Apache Tomcat v$tomcat_version..."
+    Write-Log "Downloading Apache Tomcat v$tomcat_version..." -Level INFO
 
     if (Check-UrlExists -url $tomcat_base_url) {
-        Write-Host "Apache Tomcat v${tomcat_version} found on the main server."
+        Write-Log "Apache Tomcat v${tomcat_version} found on the main server." -Level INFO
         Invoke-WebRequest -Uri $tomcat_base_url -OutFile $tomcat_download_file -UseBasicParsing -ErrorAction Stop
-		Write-Host "Apache Tomcat v${tomcat_version} downloaded from ${tomcat_base_url}."
+		Write-Log "Apache Tomcat v${tomcat_version} downloaded from ${tomcat_base_url}." -Level INFO
     } elseif (Check-UrlExists -url $tomcat_archive_url) {
-        Write-Host "Apache Tomcat v${tomcat_version}not found on the main server, trying on the archive..."
+        Write-Log "Apache Tomcat v${tomcat_version}not found on the main server, trying on the archive..." -Level INFO
         Invoke-WebRequest -Uri $tomcat_archive_url -OutFile $tomcat_download_file -UseBasicParsing -ErrorAction Stop
-		Write-Host "Apache Tomcat downloaded from ${tomcat_archive_url}."
+		Write-Log "Apache Tomcat downloaded from ${tomcat_archive_url}." -Level INFO
     } else {
-        Write-Host "Error: Apache Tomcat v${tomcat_version} not found."
+        Write-Log "Error: Apache Tomcat v${tomcat_version} not found." -Level ERROR
         Exit 1
     }
 }
 
 # Download Glowroot APM
 function Download-Glowroot {
-	Write-Host "Downloading Glowroot v$glowroot_version..."
+	Write-Log "Downloading Glowroot v$glowroot_version..." -Level INFO
 
     if (Check-UrlExists -url $glowroot_url) {
         Invoke-WebRequest -Uri $glowroot_url -OutFile $glowroot_download_file -UseBasicParsing -ErrorAction Stop
 		Invoke-WebRequest -Uri $glowroot_central_url -OutFile $glowroot_central_download_file -UseBasicParsing -ErrorAction Stop
-		Write-Host "Glowroot downloaded from ${glowroot_url}."
+		Write-Log "Glowroot downloaded from ${glowroot_url}." -Level INFO
     } else {
-        Write-Host "Glowroot v${glowroot_version} not found. Skipping Glowroot APM."
+        Write-Log "Glowroot v${glowroot_version} not found. Skipping Glowroot APM." -Level WARN
     }
 }
 
 # Install and configure Tomcat
 function Install-Tomcat {
 	# Extract Tomcat 
-	Write-Host "Extracting Apache Tomcat to ${tomcat_base_dir}..."
+	Write-Log "Extracting Apache Tomcat to ${tomcat_base_dir}..." -Level INFO
 	if (-Not (Test-Path -Path $tomcat_base_dir)) {
 		New-Item -ItemType Directory -Path $tomcat_base_dir | Out-Null
 	}
@@ -93,7 +93,7 @@ function Install-Tomcat {
 	Get-ChildItem -Path "${tomcat_install_path}\webapps" -Recurse | Remove-Item -Recurse -Force | Out-Null
 	
 	# Update tomcat-users.xml
-	Write-Host "Updating tomcat-users.xml..."
+	Write-Log "Updating tomcat-users.xml..." -Level INFO
 	$tomcat_users_file = "${tomcat_install_path}\conf\tomcat-users.xml"
 	Set-Content -Path $tomcat_users_file -Value @"
 <tomcat-users xmlns="http://tomcat.apache.org/xml"
@@ -107,7 +107,7 @@ function Install-Tomcat {
 "@
 	
 	# Update server.xml
-	Write-Host "Updating server.xml..."
+	Write-Log "Updating server.xml..." -Level INFO
 	$tomcat_server_file = "${tomcat_install_path}\conf\server.xml"
 	#$server_template_file = ".\server_template.xml"
 	#$server_template_content = Get-Content -Path ${server_template_file} -Raw
@@ -159,7 +159,7 @@ function Install-Tomcat {
 "@
 
 	# Update logging.properties
-	Write-Host "Updating logging.properties..."
+	Write-Log "Updating logging.properties..." -Level INFO
 	$tomcat_logging_file = "${tomcat_install_path}\conf\logging.properties"
 	Set-Content -Path $tomcat_logging_file -Value @"
 handlers = 1catalina.org.apache.juli.AsyncFileHandler, 2localhost.org.apache.juli.AsyncFileHandler, java.util.logging.ConsoleHandler
@@ -203,18 +203,18 @@ org.apache.catalina.core.ContainerBase.[Catalina].[localhost].handlers = 2localh
 
 # Install and configure Glowroot APM
 function Install-Glowroot {
-	Write-Host "Started Glowroot v${glowroot_version} installation..."
+	Write-Log "Started Glowroot v${glowroot_version} installation..." -Level INFO
 	# Extract Glowroot 
-	Write-Host "Extracting Glowroot v${glowroot_version} to ${tomcat_base_dir}"
+	Write-Log "Extracting Glowroot v${glowroot_version} to ${tomcat_base_dir}" -Level INFO
 	if (-Not (Test-Path -Path $tomcat_base_dir)) {
 		New-Item -ItemType Directory -Path $tomcat_base_dir | Out-Null
 	}
 	Expand-Archive -Path $glowroot_download_file -DestinationPath $tomcat_base_dir -Force | Out-Null
 	Expand-Archive -Path $glowroot_central_download_file -DestinationPath $tomcat_base_dir -Force | Out-Null
 	
-	Write-Host "Configuring Glowroot v${glowroot_version}..."
+	Write-Log "Configuring Glowroot v${glowroot_version}..." -Level INFO
 	$glowroot_hash_password = & java -jar ${tomcat_base_dir}\glowroot-central\glowroot-central.jar hash-password $glowroot_password
-	#Write-Host "Glowroot password:${glowroot_password} hash to ${glowroot_hash_password}"
+	#Write-Log "Glowroot password:${glowroot_password} hash to ${glowroot_hash_password}" -Level INFO
 	$glowroot_admin_file = "${tomcat_base_dir}\glowroot\admin.json"
 	Set-Content -Path $glowroot_admin_file -Value @"
 {
@@ -273,7 +273,7 @@ function Install-Glowroot {
 # Script
 #######################
 
-Write-Host "Started Tomcat v$tomcat_version and Glowroot v${glowroot_version} installation..."
+Write-Log "Started Tomcat v$tomcat_version and Glowroot v${glowroot_version} installation..." -Level INFO
 
 # Verify if tomcat service exists and is running
 $service = Get-Service -Name $tomcat_service_name -ErrorAction SilentlyContinue
@@ -281,9 +281,9 @@ $service = Get-Service -Name $tomcat_service_name -ErrorAction SilentlyContinue
 if ($service) {
 	# If tomcat service is running, stop it
 	if ($service.Status -ieq "Running") {
-		Write-Host "Tomcat service ${tomcat_service_name} found"	
+		Write-Log "Tomcat service ${tomcat_service_name} found" -Level INFO
 		Stop-Service -Name $tomcat_service_name -Force -ErrorAction Stop
-		Write-Host "Stopped service ${tomcat_service_name}"
+		Write-Log "Stopped service ${tomcat_service_name}" -Level INFO
 	} 
 }
 
@@ -306,7 +306,7 @@ $current_path = Get-Location
 Set-Location ${tomcat_install_path}\bin
 if (-Not ($service)) {
 	# Create Tomcat service if not exists
-	Write-Host "Creating Tomcat service '${tomcat_service_name}'"
+	Write-Log "Creating Tomcat service '${tomcat_service_name}'" -Level INFO
 	cmd.exe /c "service.bat install ${tomcat_service_name}"
 }
 $tomcatExe = "tomcat${tomcat_base_version}.exe"
@@ -319,6 +319,6 @@ Set-Location $current_path
 
 # Start Tomcat service
 Start-Service -Name $tomcat_service_name
-Write-Host "Started service ${tomcat_service_name}"
+Write-Log "Started service ${tomcat_service_name}" -Level INFO
 
-Write-Host "Tomcat v${tomcat_version} and Glowroot v${glowroot_version} installed and configured successfully."
+Write-Log "Tomcat v${tomcat_version} and Glowroot v${glowroot_version} installed and configured successfully." -Level INFO

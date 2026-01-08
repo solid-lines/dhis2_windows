@@ -16,22 +16,22 @@ $letsencrypt_dir = "C:\Certbot"
 
 # Download and install nginx
 function Download-Install-Nginx {
-	Write-Host "Downloading and installing Nginx v${proxy_version}..."
+	Write-Log "Downloading and installing Nginx v${proxy_version}..." -Level INFO
 	$nginxURL = "https://nginx.org/download/nginx-${proxy_version}.zip"
 	$nginxZip = ".\nginx.zip"
-	Invoke-WebRequest -Uri $nginxURL -OutFile $nginxZip -UseBasicParsing
+	Invoke-WebRequest -Uri $nginxURL -OutFile $nginxZip -UseBasicParsing -ErrorAction Stop
 	
 	# Remove the previous nginx folder and extract the installation zip file
 	if (Test-Path -Path ${nginx_install_path}) {
 		Remove-Item -Path ${nginx_install_path} -Recurse -Force
 	}
 	Expand-Archive -Path $nginxZip -DestinationPath ${nginx_install_path} -Force | Out-Null
-	#Remove-Item -Path $nginxZip
+	#Remove-Item -Path $nginxZip -Recurse -Force
 }
 
 # Preconfigure Nginx creating performance.conf, gzip.conf, security.conf, stub-status.conf, proxycommon.conf, proxysecurity.conf and nginx.conf configuration files
 function Preconfigure-Nginx {
-	Write-Host "Configuring Nginx..."
+	Write-Log "Configuring Nginx..." -Level INFO
 	$nginx_performance_conf_file = "${nginx_install_path}\nginx-${proxy_version}\conf\performance.conf"
 	$nginx_gzip_conf_file = "${nginx_install_path}\nginx-${proxy_version}\conf\gzip.conf"
 	$nginx_security_conf_file = "${nginx_install_path}\nginx-${proxy_version}\conf\security.conf"
@@ -180,9 +180,9 @@ function Create-Nginx-Service {
 	# Install nssm
 	$nssm_url = "https://nssm.cc/release/nssm-2.24.zip"
 	$nssm_file = ".\nssm.zip"
-	Invoke-WebRequest -Uri ${nssm_url} -OutFile ${nssm_file} -UseBasicParsing
+	Invoke-WebRequest -Uri ${nssm_url} -OutFile ${nssm_file} -UseBasicParsing -ErrorAction Stop
 	Expand-Archive -Path ${nssm_file} -DestinationPath "C:\Program Files\" -Force | Out-Null
-	Remove-Item -Path ${nssm_file}
+	Remove-Item -Path ${nssm_file} -Recurse -Force
 	$current_path = Get-Location
 	Set-Location "C:\Program Files\nssm-2.24\win64\"
 	$nginx_exe = "${nginx_install_path}\nginx-${proxy_version}\nginx.exe"
@@ -193,28 +193,28 @@ function Create-Nginx-Service {
 
 # Download and install Certbot to get SSL Certificates (REVIEW if localhost)
 function Install-Certbot {
-	Write-Host "Downloading and installing certbot to request SSL certificate..."
+	Write-Log "Downloading and installing certbot to request SSL certificate..." -Level INFO
 	if (-not (Test-Path -Path $letsencrypt_dir)) {
 		New-Item -ItemType Directory -Path $letsencrypt_dir | Out-Null
 	}
 	
 	$certbot_url = "https://github.com/certbot/certbot/releases/download/v2.9.0/certbot-beta-installer-win_amd64_signed.exe"
 	$certbot_installer = ".\certbot-installer.exe"
-	Invoke-WebRequest -Uri $certbot_url -OutFile $certbot_installer
+	Invoke-WebRequest -Uri $certbot_url -OutFile $certbot_installer -UseBasicParsing -ErrorAction Stop
 	Start-Process -FilePath $certbot_installer -ArgumentList "/S" -Wait
 	Move-Item -Path "C:\Program Files\Certbot\*" -Destination ${letsencrypt_dir} -Force | Out-Null
 	[Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";${letsencrypt_dir}", [EnvironmentVariableTarget]::Machine)
-	Remove-Item -Path $certbot_installer
+	Remove-Item -Path $certbot_installer -Recurse -Force
 	
 	# Request SSL Certificate for the domain name
-	Write-Host "Requesting SSL Certificate..."
+	Write-Log "Requesting SSL Certificate..." -Level INFO
 	$certbot_exe = "$letsencrypt_dir\bin\certbot.exe"
 	Start-Process -FilePath $certbot_exe -ArgumentList "certonly --standalone -n --agree-tos -m admin@${proxy_hostname} -d ${proxy_hostname}" -Wait
 }
 
 # Configure Nginx with SSL
 function Configure-SSL-Nginx {
-	Write-Host "Configuring Nginx with SSL..."
+	Write-Log "Configuring Nginx with SSL..." -Level INFO
 	$nginx_base_ssl_conf_file = "${nginx_install_path}\nginx-${proxy_version}\conf\nginx.conf"
 	$nginx_ssl_conf_file = "${nginx_install_path}\nginx-${proxy_version}\conf\ssl.conf"
 	
@@ -312,7 +312,7 @@ http {
 # Script
 #######################
 
-Write-Host "Init Nginx v${proxy_version} proxy server installation..."
+Write-Log "Init Nginx v${proxy_version} proxy server installation..." -Level INFO
 
 Download-Install-Nginx
 Preconfigure-Nginx
@@ -321,4 +321,4 @@ Install-Certbot
 Configure-SSL-Nginx
 Restart-Service -Name $proxy_service_name
 
-Write-Host "Nginx installed and configured successfully as proxy server (https://${proxy_hostname})"
+Write-Log "Nginx installed and configured successfully as proxy server (https://${proxy_hostname})" -Level INFO

@@ -30,13 +30,13 @@ function Check-PostgreSQL {
     $postgresService = Get-Service | Where-Object { $_.DisplayName -like "*postgres*" -and $_.Status -eq "Running" }
 
     if ($portInUse -or $postgresService) {
-        Write-Host "There is already a postgresql service running and port ${pg_port} is already listening."
+        Write-Log "There is already a postgresql service running and port ${pg_port} is already listening." -Level INFO
 		return $true
     } elseif ($portInUse) {
-        Write-Host "Port ${pg_port} is already listening."
+        Write-Log "Port ${pg_port} is already listening." -Level INFO
 		return $true
     } elseif ($postgresService) {
-        Write-Host "There is already a postgresql service running."
+        Write-Log "There is already a postgresql service running." -Level INFO
 		return $true
     } else {
         return $false
@@ -48,7 +48,7 @@ function Get-PostgreSQL-Versions {
 	$url = "https://www.enterprisedb.com/downloads/postgres-postgresql-downloads"
 	
 	# Dopwnload HTML and get content
-	$response = Invoke-WebRequest -Uri $url -UseBasicParsing
+	$response = Invoke-WebRequest -Uri $url -UseBasicParsing -UseBasicParsing -ErrorAction Stop
 	$htmlContent = $response.Content
 	[xml]$html = $htmlContent
 	$table = $html.getElementsByTagName("table")[0]
@@ -100,24 +100,24 @@ function Install-PostgreSQL {
 	$data = Get-PostgreSQL-Versions
 	$downloadLink = Get-PostgreSQL-DownloadLink
 	$pgDownloadFile = ".\postgresql_${pg_version}_installer.exe"
-	Write-Host "Downloading PostgreSQL v${pg_version}..."
+	Write-Log "Downloading PostgreSQL v${pg_version}..." -Level INFO
 
-	Invoke-WebRequest -Uri ${downloadLink} -OutFile ${pgDownloadFile}
+	Invoke-WebRequest -Uri ${downloadLink} -OutFile ${pgDownloadFile} -UseBasicParsing -ErrorAction Stop
 	
 	# Install POstgreSQL, Postgis and PGAdmin. Create PostgreSQL service
-	Write-Host "Installing PostgreSQL v${pg_version}..."
+	Write-Log "Installing PostgreSQL v${pg_version}..." -Level INFO
 	Start-Process ${pgDownloadFile} -ArgumentList "--mode unattended", "--unattendedmodeui none", "--superpassword `"${pg_password}`"", "--serverport ${pg_port}", "--servicename `"${pg_service_name}`"", "--superaccount `"${pg_username}`"" -Wait;
 	#Remove-Item -Path ${pgDownloadFile}
 }
 
 # Install Postgis
 function Install-Postgis {	
-    Write-Output "Downloading and installing Postgis for PostgreSQL v${pg_version}..."
+    Write-Log "Downloading and installing Postgis for PostgreSQL v${pg_version}..." -Level INFO
 
     $postgisURL = "https://download.osgeo.org/postgis/windows/pg${pg_version}/postgis-bundle-pg${pg_version}x64-setup-${postgis_version}-1.exe"
     $postgisFile = ".\pg_${pg_version}_postgis.exe"
 
-    Invoke-WebRequest -Uri $postgisURL -OutFile $postgisFile
+    Invoke-WebRequest -Uri $postgisURL -OutFile $postgisFile -UseBasicParsing -ErrorAction Stop
 
     Start-Process -FilePath $postgisFile -ArgumentList "/S" -Wait
 }
@@ -206,7 +206,7 @@ shared_preload_libraries = 'pg_stat_statements'
 # Script
 #######################
 
-Write-Host "Init PostgreSQL v${pg_version} installation..."
+Write-Log "Init PostgreSQL v${pg_version} installation..." -Level INFO
 
 if (-not (Check-PostgreSQL)) {
 	# Download and install PostgreSQL (also PGAdmin)
@@ -237,4 +237,4 @@ if (-not ($current_pgpass_entries -contains $postgres_dhis2_entry)) {
 icacls $pgpass_path /inheritance:r /grant "$($env:USERNAME):F" | Out-Null
 
 Restart-Service -Name $pg_service_name
-Write-Host "PostgreSQL v${pg_version} installed and configured successfully."
+Write-Log "PostgreSQL v${pg_version} installed and configured successfully." -Level INFO

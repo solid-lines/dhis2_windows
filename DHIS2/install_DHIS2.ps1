@@ -60,10 +60,10 @@ function Download-DHIS2 {
 	# Compose URL and download war file
 	$war_url = Get-DHIS2-URL
 	
-	Write-Host "Downloading DHIS2 v${dhis2_version} war file... (${war_url})"
+	Write-Log "Downloading DHIS2 v${dhis2_version} war file... (${war_url})"
 
 	try {
-		Invoke-WebRequest -Uri $war_url -OutFile $war_file -ErrorAction Stop
+		Invoke-WebRequest -Uri $war_url -OutFile $war_file -UseBasicParsing -ErrorAction Stop
 	} catch {
 		Write-Error "Error downloading DHIS2 v${dhis2_version} war file."
 		Exit 1
@@ -72,7 +72,7 @@ function Download-DHIS2 {
 
 # Configure DHIS_HOME and dhis.conf
 function Configure-DHIS2 {
-	Write-Host "Configuring DHIS2_HOME in ${dhis_home}"
+	Write-Log "Configuring DHIS2_HOME in ${dhis_home}"
 	if (-Not (Test-Path -Path $dhis2_home)) {
 		New-Item -Path $dhis2_home -ItemType Directory | Out-Null
 	}
@@ -81,7 +81,7 @@ function Configure-DHIS2 {
 	$dhis2MaxPoolInt = [int]$pg_max_connections - 10
 	$dhis2MaxPool = $dhis2MaxPoolInt.ToString()
 	
-	Write-Host "Configuring dhis.conf"
+	Write-Log "Configuring dhis.conf"
 	$dhis2_config_file = "${dhis2_home}\dhis.conf"
 	Set-Content -Path $dhis2_config_file -Value @"
 connection.dialect = org.hibernate.dialect.PostgreSQLDialect
@@ -113,7 +113,7 @@ monitoring.cpu.enabled = on
 
 # Create DHIS2 database
 function Create-DHIS2-Database {
-	Write-Host "Creating and configuring DHIS2 database"
+	Write-Log "Creating and configuring DHIS2 database" -Level INFO
 
 	$checkRoleCommand = "& 'C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe' -h ${pg_host} -U ${pg_username} -tAc `"SELECT 1 FROM pg_roles WHERE rolname='${dhis2_db_username}';`""
 	try {
@@ -121,18 +121,18 @@ function Create-DHIS2-Database {
 		$roleExists = Invoke-Expression $checkRoleCommand
 		
 		if ($roleExists -match "1") {
-			Write-Output "Role '${dhis2_db_username}' already exists in PostgreSQL. Updating password"
+			Write-Log "Role '${dhis2_db_username}' already exists in PostgreSQL. Updating password" -Level INFO
 			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "ALTER ROLE ${dhis2_db_username} WITH PASSWORD '${dhis2_db_password}';"
 		} else {
-			Write-Output "Creating Role '${dhis2_db_username}' in PostgreSQL"
+			Write-Log "Creating Role '${dhis2_db_username}' in PostgreSQL" -Level INFO
 			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "CREATE ROLE ${dhis2_db_username} WITH LOGIN PASSWORD '${dhis2_db_password}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
 		}
 	} catch {
-		Write-Error "Error creating dhis role."
+		Write-Log "Error creating dhis role." -Level ERROR
 	}
 	
 	# Create DHIS2 databse in PostgreSQL
-	Write-Host "Creating DHIS2 database..."
+	Write-Log "Creating DHIS2 database..." -Level INFO
 	$checkDbCommand = "& 'C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe' -h ${pg_host}  -U ${pg_username} -tAc `"SELECT 1 FROM pg_database WHERE datname='${dhis2_db_name}';`""
 
 	try {
@@ -140,25 +140,25 @@ function Create-DHIS2-Database {
 		$dbExists = Invoke-Expression $checkDbCommand
 
 		if ($dbExists -match "1") {
-			Write-Output "Database '${dhis2_db_name}' already exists in PostgreSQL. Dropping database"
+			Write-Log "Database '${dhis2_db_name}' already exists in PostgreSQL. Dropping database" -Level INFO
 			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE datname = '${dhis2_db_name}';"
 			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "DROP DATABASE ${dhis2_db_name};"
 		}
-		Write-Output "Creating database '${dhis2_db_name}' in PostgreSQL"
+		Write-Log "Creating database '${dhis2_db_name}' in PostgreSQL" -Level INFO
 		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "CREATE DATABASE ${dhis2_db_name} OWNER ${dhis2_db_username};"
 	} catch {
-		Write-Error "Error creating dhis2 database."
+		Write-Log "Error creating dhis2 database." -Level ERROR
 	}
 	
 	# Create extensions
-	Write-Host "Creating postgres extensions for DHIS2..."
+	Write-Log "Creating postgres extensions for DHIS2..." -Level INFO
 	try {
 		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS postgis;"
 		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS btree_gin;"
 		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
 		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
 	} catch {
-		Write-Error "Error creating postgres extension in DHIS2 database."
+		Write-Log "Error creating postgres extension in DHIS2 database." -Level ERROR
 	}
 	
 	# Add .pgpass entry
@@ -178,19 +178,19 @@ function Create-DHIS2-Database {
 
 # Deploy DHIS2 war file
 function Deploy-DHIS2 {
-	Write-Host "Deploying DHIS2 war file..."
+	Write-Log "Deploying DHIS2 war file..." -Level INFO
 	$webapps_path = "${tomcat_install_path}\webapps"
 	$dhis2_deploy_path = "${webapps_path}\${dhis2_path}"
 
-	Write-Host "WEBAPPS PATH: ${webapps_path}, DHIS_DEPLOY_PATH: ${dhis2_deploy_path}"
+	#Write-Log "WEBAPPS PATH: ${webapps_path}, DHIS_DEPLOY_PATH: ${dhis2_deploy_path}" -Level INFO
 	# Remove previous deployments
 	if (Test-Path -Path "${webapps_path}\${dhis2_path}.war") {
-		Remove-Item -Path "${webapps_path}\${dhis2_path}.war" -Force
+		Remove-Item -Path "${webapps_path}\${dhis2_path}.war" -Recurse -Force
 	}
 	if (Test-Path -Path $dhis2_deploy_path) {
 		Remove-Item -Path $dhis2_deploy_path -Recurse -Force
 	}
-Write-Host "COPIANDO ${war_file} a ${webapps_path}\${dhis2_path}.war"
+	#Write-Log "COPIANDO ${war_file} a ${webapps_path}\${dhis2_path}.war" -Level INFO
 	# Copy war file to webapps folder
 	Copy-Item -Path $war_file -Destination "${webapps_path}\${dhis2_path}.war"
 	
@@ -202,11 +202,11 @@ Write-Host "COPIANDO ${war_file} a ${webapps_path}\${dhis2_path}.war"
 # Script
 #######################
 
-Write-Host "Init DHIS2 v${dhis2_version} installation..."
+Write-Log "Init DHIS2 v${dhis2_version} installation..." -Level INFO
 
 Download-DHIS2
 Configure-DHIS2
 Create-DHIS2-Database
 Deploy-DHIS2
 
-Write-Host "DHIS2 v${dhis2_version} deployed and configured successfully."
+Write-Log "DHIS2 v${dhis2_version} deployed and configured successfully." -Level INFO
