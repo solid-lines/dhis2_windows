@@ -16,8 +16,9 @@ param (
 )
 
 # URLs and paths
-$tomcat_base_url = "https://dlcdn.apache.org/tomcat/tomcat-9/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip"
-$tomcat_archive_url = "https://archive.apache.org/dist/tomcat/tomcat-9/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip"
+$tomcat_base_version = $tomcat_version.Split(".")[0]
+$tomcat_base_url = "https://dlcdn.apache.org/tomcat/tomcat-${tomcat_base_version}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip"
+$tomcat_archive_url = "https://archive.apache.org/dist/tomcat/tomcat-${tomcat_base_version}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip"
 $tomcat_download_file = ".\${tomcat_path}.zip"
 $tomcat_base_dir = "C:\Program Files\Tomcat"
 $tomcat_install_path = "C:\Program Files\Tomcat\${tomcat_path}"
@@ -34,7 +35,7 @@ $glowroot_central_download_file = ".\glowroot-central-${glowroot_version}.zip"
 function Check-UrlExists {
     param ([string]$url)
     try {
-        $response = Invoke-WebRequest -Uri $url -Method Head -ErrorAction Stop
+        $response = Invoke-WebRequest -Uri $url -Method Head -UseBasicParsing -ErrorAction Stop
         return $true
     } catch {
         return $false
@@ -47,11 +48,11 @@ function Download-Tomcat {
 
     if (Check-UrlExists -url $tomcat_base_url) {
         Write-Host "Apache Tomcat v${tomcat_version} found on the main server."
-        Invoke-WebRequest -Uri $tomcat_base_url -OutFile $tomcat_download_file -ErrorAction Stop
+        Invoke-WebRequest -Uri $tomcat_base_url -OutFile $tomcat_download_file -UseBasicParsing -ErrorAction Stop
 		Write-Host "Apache Tomcat v${tomcat_version} downloaded from ${tomcat_base_url}."
     } elseif (Check-UrlExists -url $tomcat_archive_url) {
         Write-Host "Apache Tomcat v${tomcat_version}not found on the main server, trying on the archive..."
-        Invoke-WebRequest -Uri $tomcat_archive_url -OutFile $tomcat_download_file -ErrorAction Stop
+        Invoke-WebRequest -Uri $tomcat_archive_url -OutFile $tomcat_download_file -UseBasicParsing -ErrorAction Stop
 		Write-Host "Apache Tomcat downloaded from ${tomcat_archive_url}."
     } else {
         Write-Host "Error: Apache Tomcat v${tomcat_version} not found."
@@ -64,8 +65,8 @@ function Download-Glowroot {
 	Write-Host "Downloading Glowroot v$glowroot_version..."
 
     if (Check-UrlExists -url $glowroot_url) {
-        Invoke-WebRequest -Uri $glowroot_url -OutFile $glowroot_download_file -ErrorAction Stop
-		Invoke-WebRequest -Uri $glowroot_central_url -OutFile $glowroot_central_download_file -ErrorAction Stop
+        Invoke-WebRequest -Uri $glowroot_url -OutFile $glowroot_download_file -UseBasicParsing -ErrorAction Stop
+		Invoke-WebRequest -Uri $glowroot_central_url -OutFile $glowroot_central_download_file -UseBasicParsing -ErrorAction Stop
 		Write-Host "Glowroot downloaded from ${glowroot_url}."
     } else {
         Write-Host "Glowroot v${glowroot_version} not found. Skipping Glowroot APM."
