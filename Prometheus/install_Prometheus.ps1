@@ -1,15 +1,20 @@
 #######################
 # Params
 #######################
-param (
-	[string]$prometheus_version,
-	[string]$grafana_version,
-	[string]$pg_username,
-	[string]$pg_password,
-	[string]$dhis2_db_name,
-	[string]$proxy_hostname,
-	[string]$proxy_version
+param(
+  [Parameter(Mandatory)] $Config
 )
+$prometheus_grafana = $Config.monitoring.prometheus_grafana
+$postgresql = $Config.postgresql
+$dhis2 = $Config.dhis2
+$proxy = $Config.proxy
+$prometheus_version = [string]$prometheus_grafana.prometheus_version
+$grafana_version = [string]$prometheus_grafana.grafana_version
+$pg_username = [string]$postgresql.username
+$pg_password = [string]$postgresql.password
+$dhis2_db_name = [string]$dhis2.db_name
+$proxy_hostname = [string]$proxy.hostname
+$proxy_version = [string]$proxy.version
 
 $prometheus_base_install_path = "C:\Program Files\Prometheus"
 $postgres_exporter_version = "0.16.0"

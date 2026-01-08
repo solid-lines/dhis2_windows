@@ -1,11 +1,13 @@
 #######################
 # Params
 #######################
-param (
-    [string]$proxy_hostname,
-    [string]$proxy_version,
-	[string]$proxy_service_name
+param(
+  [Parameter(Mandatory)] $Config
 )
+$proxy = $Config.proxy
+$proxy_hostname = [string]$proxy.hostname
+$proxy_version = [string]$proxy.version
+$proxy_service_name = [string]$proxy.service_name
 
 $nginx_install_path = "C:\Program Files\Nginx"
 $letsencrypt_dir = "C:\Certbot"

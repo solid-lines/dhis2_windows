@@ -1,20 +1,23 @@
 #######################
 # Params
 #######################
-param (
-    [string]$tomcat_version,
-	[string]$tomcat_path,
-    [string]$tomcat_service_name,
-	[string]$tomcat_port,
-	[string]$tomcat_xmx,
-	[string]$tomcat_xms,
-	[string]$tomcat_username,
-    [string]$tomcat_password,
-	[string]$glowroot_enabled,
-	[string]$glowroot_version,
-	[string]$glowroot_username,
-    [string]$glowroot_password
+param(
+  [Parameter(Mandatory)] $Config
 )
+$tomcat = $Config.tomcat
+$glowroot = $Config.monitoring.glowroot
+$tomcat_version = [string]$tomcat.version
+$tomcat_path = [string]$tomcat.path
+$tomcat_service_name = [string]$tomcat.service_name
+$tomcat_port = [string]$tomcat.port
+$tomcat_xmx = [string]$tomcat.xmx
+$tomcat_xms = [string]$tomcat.xms
+$tomcat_username = [string]$tomcat.username
+$tomcat_password = [string]$tomcat.password
+$glowroot_enabled =	[string]$glowroot.enabled
+$glowroot_version =	[string]$glowroot.version
+$glowroot_username = [string]$glowroot.username
+$glowroot_password = [string]$glowroot.password
 
 # URLs and paths
 $tomcat_base_version = $tomcat_version.Split(".")[0]

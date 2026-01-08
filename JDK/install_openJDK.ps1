@@ -1,9 +1,10 @@
 #######################
 # Params
 #######################
-param (
-    [string]$jdk_version
+param(
+  [Parameter(Mandatory)] $Config
 )
+$jdk_version = $Config.jdk.version
 
 #######################
 # Functions
@@ -39,6 +40,7 @@ function Is-JdkInstalled {
 #######################
 
 Write-Log "Init JDK ${jdk_version} installation..." -Level INFO
+Write-Log "Parameter jdk_version:${jdk_version}" -Level DEBUG
 
 # Download and install OpenJDK (if not installed)
 if (-not (Is-JdkInstalled)) {

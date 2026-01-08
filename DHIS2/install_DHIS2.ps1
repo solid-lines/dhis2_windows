@@ -1,24 +1,29 @@
 #######################
 # Params
 #######################
-param (
-    [string]$dhis2_version,              
-    [string]$dhis2_db_name,    
-    [string]$dhis2_db_username,    
-    [string]$dhis2_db_password, 
-    [string]$dhis2_path, 
-    [string]$dhis2_home,
-	[string]$pg_version,
-	[string]$pg_host,
-	[string]$pg_port,
-	[string]$pg_username,
-	[string]$pg_password,
-	[string]$pg_service_name,
-	[string]$pg_max_connections,
-	[string]$tomcat_path,
-	[string]$tomcat_service_name,
-	[string]$proxy_hostname
+param(
+  [Parameter(Mandatory)] $Config
 )
+$postgresql = $Config.postgresql
+$dhis2 = $Config.dhis2
+$tomcat = $Config.tomcat
+$proxy = $Config.proxy
+$dhis2_version = [string]$dhis2.version
+$dhis2_db_name = [string]$dhis2.db_name
+$dhis2_db_username = [string]$dhis2.db_username
+$dhis2_db_password = [string]$dhis2.db_password
+$dhis2_path = [string]$dhis2.path
+$dhis2_home = [string]$dhis2.home
+$pg_version = [string]$postgresql.version
+$pg_host = [string]$postgresql.host
+$pg_port = [string]$postgresql.port
+$pg_username = [string]$postgresql.username
+$pg_password = [string]$postgresql.password
+$pg_service_name = [string]$postgresql.service_name
+$pg_max_connections = [string]$postgresql.max_connections
+$tomcat_path = [string]$tomcat.path
+$tomcat_service_name = [string]$tomcat.service_name
+$proxy_hostname = [string]$proxy.hostname
 
 $tomcat_install_path = "C:\Program Files\Tomcat\${tomcat_path}"
 $war_file = ".\${dhis2_path}.war"

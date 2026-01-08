@@ -1,4 +1,15 @@
 {
+  "components": {
+    "jdk": true,
+    "postgresql": true,
+    "tomcat": true,
+    "dhis2": true,
+    "nginx": true
+  },
+  "logging": {
+    "level": "INFO",
+    "path": ".\\logs"
+  },
   "jdk": {
     "version": "17"
   },
@@ -6,7 +17,7 @@
     "version": "10.1.50",
 	"path": "latest",
 	"service_name": "Tomcat10",
-	"port": "8080"
+	"port": "8080",
 	"xmx": "4096",
 	"xms": "2048",
 	"username": "admin",

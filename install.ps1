@@ -2,9 +2,28 @@
 # Functions
 #######################
 
-# Logs
-$LogFile = ".\logs\install_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
-New-Item -Path ".\logs" -ItemType Directory -Force | Out-Null
+function Init-Logs {
+	# Log Levels
+	$LogLevels = @{
+		"DEBUG" = 0
+		"INFO"  = 1
+		"WARN"  = 2
+		"ERROR" = 3
+	}
+	
+	# Get Log Level from config.json (default: INFO)
+	$ConfigLogLevel = if ($config.logging.level) { $config.logging.level.ToUpper() } else { "INFO" }
+
+	if (-not $LogLevels.ContainsKey($ConfigLogLevel)) {
+		Write-Host "Invalid log level '$ConfigLogLevel'. Using INFO." -ForegroundColor Yellow
+		$ConfigLogLevel = "INFO"
+	}
+
+	# Create logs path
+	$LogPath = if ($config.logging.path) { $config.logging.path } else { ".\logs" }
+	$LogFile = "$LogPath\install_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
+	New-Item -Path $LogPath -ItemType Directory -Force | Out-Null
+}
 
 function Write-Log {
     param(
@@ -13,14 +32,18 @@ function Write-Log {
         [string]$Level = "INFO"
     )
     
+    if ($LogLevels[$Level] -lt $LogLevels[$ConfigLogLevel]) {
+        return
+    }
+    
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $logEntry = "[$timestamp] [$Level] $Message"
     
     # Write to console
     switch ($Level) {
-        "DEBUG" { Write-Host $logEntry -ForegroundColor Yellow }
+        "DEBUG" { Write-Host $logEntry -ForegroundColor Gray }
         "INFO"  { Write-Host $logEntry -ForegroundColor White }
-        "WARN"  { Write-Host $logEntry -ForegroundColor Orange }
+        "WARN"  { Write-Host $logEntry -ForegroundColor Yellow }
         "ERROR" { Write-Host $logEntry -ForegroundColor Red }
     }
     
@@ -42,6 +65,11 @@ function Add-PortFirewall {
 	}
 }
 
+function Should-Run([string]$name) {
+	if ($Components.Count -gt 0) { return ($Components -contains $name) }
+	return [bool]$config.components.$name
+}
+
 #######################
 # Script
 #######################
@@ -61,52 +89,21 @@ Unblock-File -Path ".\DHIS2\install_DHIS2.ps1"
 Unblock-File -Path ".\Nginx\install_Nginx.ps1"
 Unblock-File -Path ".\Prometheus\install_Prometheus.ps1"
 
-Write-Log "Init DHIS2 installation...." -Level INFO
-Write-Log "Loading config settings" -Level INFO
+Write-Host "Loading config settings" -ForegroundColor White
 
 # Load config.json and get variables
 try {
 	$config = Get-Content -Raw -Path ".\config.json" | ConvertFrom-Json
+	$Components = @()
+	$glowroot_enabled = $config.monitoring.glowroot.enabled
+	$prometheus_grafana_enabled = $config.monitoring.prometheus_grafana.enabled
 } catch {
-    Write-Log "Config file: config.json has errors. Please review it!  $_" -Level ERROR 
+	Write-Error "Config file: config.json has errors. Please review it!  $_" 
+    Exit 1
 }
 
-$jdk_version = $config.jdk.version
-$tomcat_version = $config.tomcat.version
-$tomcat_path = $config.tomcat.path
-$tomcat_service_name = $config.tomcat.service_name
-$tomcat_port = $config.tomcat.port
-$tomcat_xmx = $config.tomcat.xmx
-$tomcat_xms = $config.tomcat.xms
-$tomcat_username = $config.tomcat.username
-$tomcat_password = $config.tomcat.password
-$glowroot_enabled = $config.monitoring.glowroot.enabled
-$glowroot_version = $config.monitoring.glowroot.version
-$glowroot_username = $config.monitoring.glowroot.username
-$glowroot_password = $config.monitoring.glowroot.password
-$prometheus_grafana_enabled = $config.monitoring.prometheus_grafana.enabled
-$prometheus_version = $config.monitoring.prometheus_grafana.prometheus_version
-$grafana_version = $config.monitoring.prometheus_grafana.grafana_version
-$pg_version = $config.postgresql.version
-$pg_host = $config.postgresql.host
-$pg_port = $config.postgresql.port
-$pg_username = $config.postgresql.username
-$pg_password = $config.postgresql.password
-$pg_service_name = $config.postgresql.service_name
-$pg_max_connections = $config.postgresql.max_connections
-$pg_memory_gb = $config.postgresql.memory
-$pg_cpus = $config.postgresql.cpus
-$postgis_version = $config.postgresql.postgis_version
-$dhis2_version = $config.dhis2.version
-$dhis2_home = $config.dhis2.home
-$dhis2_path = $config.dhis2.path
-$dhis2_db_name = $config.dhis2.db_name
-$dhis2_db_username = $config.dhis2.db_username
-$dhis2_db_password = $config.dhis2.db_password
-$proxy_name = $config.proxy.name
-$proxy_version = $config.proxy.version
-$proxy_hostname = $config.proxy.hostname
-$proxy_service_name = $config.proxy.service_name
+Write-Log "Init DHIS2 installation...." -Level INFO
+$Root_Location = Get-Location
 
 # Check used ports
 # 80, 443 -> nginx
@@ -114,6 +111,7 @@ $proxy_service_name = $config.proxy.service_name
 # 5432 -> postgresql
 # 4000 -> Glowroot
 # 9090, 3000 -> Prometheus, Grafana
+Write-Log "Check used ports" -Level DEBUG
 $requiredPorts = @(80, 443, ${pg_port}, ${tomcat_port})
 if ($glowroot_enabled -ieq "Y") {
     $requiredPorts += 4000
@@ -143,48 +141,30 @@ if (${proxy_hostname} -ne "localhost") {
 	Write-Log "Hostname is localhost. No firewall rules needed." -Level INFO
 }
 
-# Install JDK
 try {
-    .\JDK\install_OpenJDK.ps1 -jdk_version $jdk_version
-} catch {
-    Write-Log "JDK $jdk_version installation failed: $_" -Level ERROR 
-}
+  if (Should-Run "jdk") {
+    & (Join-Path $Root_Location "JDK\install_OpenJDK.ps1") -Config $config
+  }
+  if (Should-Run "postgresql") {
+    & (Join-Path $Root_Location "PostgreSQL\install_PostgreSQL.ps1") -Config $config
+  }
+  if (Should-Run "tomcat") {
+    & (Join-Path $Root_Location "Tomcat\install_Tomcat.ps1") -Config $config
+  }
+  if (Should-Run "dhis2") {
+    & (Join-Path $Root_Location "DHIS2\install_DHIS2.ps1") -Config $config
+  }
+  if (Should-Run "nginx") {
+    & (Join-Path $Root_Location "Nginx\install_Nginx.ps1") -Config $config
+  }
+  if ($prometheus_grafana_enabled -ieq "Y") {
+	& (Join-Path $Root_Location "Prometheus\install_Prometheus.ps1") -Config $config
+  }
 
-# Install Tomcat and Glowroot
-try {
-    .\Tomcat\install_Tomcat.ps1 -tomcat_version $tomcat_version -tomcat_service_name $tomcat_service_name -tomcat_port $tomcat_port -tomcat_path $tomcat_path -tomcat_xmx $tomcat_xmx -tomcat_xms $tomcat_xms -tomcat_username $tomcat_username -tomcat_password $tomcat_password -glowroot_enabled $glowroot_enabled -glowroot_version $glowroot_version -glowroot_username $glowroot_username -glowroot_password $glowroot_password
+  Write-Log "Installation finished successfully!" -Level INFO
 } catch {
-    Write-Log "Tomcat $tomcat_version installation failed: $_" -Level ERROR 
-}
-
-# Install PostgreSQL, postgis and PGAdmin
-try {
-    .\PostgreSQL\install_PostgreSQL.ps1 -pg_version $pg_version -pg_username $pg_username -pg_password $pg_password -pg_port $pg_port -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -pg_memory_gb $pg_memory_gb -pg_cpus $pg_cpus -dhis2_db_name $dhis2_db_name -postgis_version $postgis_version
-} catch {
-    Write-Log "PostgreSQL $pg_version installation failed: $_" -Level ERROR 
-}
-
-# Install DHIS2
-try {
-    .\DHIS2\install_DHIS2.ps1 -dhis2_version $dhis2_version -dhis2_path $dhis2_path -dhis2_db_name $dhis2_db_name -dhis2_db_username $dhis2_db_username -dhis2_db_password $dhis2_db_password -dhis2_home $dhis2_home -pg_version $pg_version -pg_host $pg_host -pg_port $pg_port -pg_username $pg_username -pg_password $pg_password -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -tomcat_path $tomcat_path -tomcat_service_name $tomcat_service_name -proxy_hostname $proxy_hostname
-} catch {
-    Write-Log "DHIS2 $dhis2_version installation failed: $_" -Level ERROR 
-}
-
-# Install Nginx
-try {
-	if ($proxy_name -ieq "nginx") {
-		.\Nginx\install_Nginx.ps1 -proxy_hostname $proxy_hostname -proxy_version $proxy_version -proxy_service_name $proxy_service_name
-	}
-} catch {
-    Write-Log "Nginx installation failed: $_" -Level ERROR 
-}
-
-# Install Prometheus and Grafana
-try {
-	if ($prometheus_grafana_enabled -ieq "Y") {
-		.\Prometheus\install_Prometheus.ps1 -proxy_hostname $proxy_hostname -proxy_version $proxy_version -prometheus_version $prometheus_version -grafana_version $grafana_version -pg_username $pg_username -pg_password $pg_password -dhis2_db_name $dhis2_db_name
-	}
-} catch {
-    Write-Log "Prometheus and Grafana installation failed: $_" -Level ERROR 
+  Write-Log "Installation fail: $($_.Exception.Message)" -Level ERROR 
+  throw
+} finally {
+  Stop-Transcript | Out-Null
 }

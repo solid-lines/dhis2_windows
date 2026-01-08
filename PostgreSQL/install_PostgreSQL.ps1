@@ -1,18 +1,22 @@
 #######################
 # Params
 #######################
-param (
-    [string]$pg_version,
-	[string]$pg_username,
-    [string]$pg_password,
-	[string]$pg_service_name,
-	[string]$pg_port,
-	[string]$pg_memory_gb,
-    [string]$pg_max_connections,
-    [string]$pg_cpus,
-	[string]$dhis2_db_name,
-	[string]$postgis_version
+param(
+  [Parameter(Mandatory)] $Config
 )
+$postgresql = $Config.postgresql
+$dhis2 = $Config.dhis2
+$pg_version = [string]$postgresql.version
+$pg_host = [string]$postgresql.host
+$pg_port = [string]$postgresql.port
+$pg_username = [string]$postgresql.username
+$pg_password = [string]$postgresql.password
+$pg_service_name = [string]$postgresql.service_name
+$pg_memory_gb = [string]$postgresql.memory
+$pg_max_connections = [string]$postgresql.max_connections
+$pg_cpus = [string]$postgresql.cpus
+$postgis_version = [string]$postgresql.postgis_version
+$dhis2_db_name = [string]$dhis2.db_name
 
 $pg_download_file = ".\postgresql_${pg_version}_installer.exe"
 $pg_install_path = "C:\Program Files\PostgreSQL\${pg_version}"
