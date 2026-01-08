@@ -4,7 +4,7 @@
 
 function Init-Logs {
 	# Log Levels
-	$LogLevels = @{
+	$script:LogLevels = @{
 		"DEBUG" = 0
 		"INFO"  = 1
 		"WARN"  = 2
@@ -12,16 +12,16 @@ function Init-Logs {
 	}
 	
 	# Get Log Level from config.json (default: INFO)
-	$ConfigLogLevel = if ($config.logging.level) { $config.logging.level.ToUpper() } else { "INFO" }
+	$script:ConfigLogLevel = if ($config.logging.level) { $config.logging.level.ToUpper() } else { "INFO" }
 
-	if (-not $LogLevels.ContainsKey($ConfigLogLevel)) {
+	if (-not $script:LogLevels.ContainsKey($script:ConfigLogLevel)) {
 		Write-Host "Invalid log level '$ConfigLogLevel'. Using INFO." -ForegroundColor Yellow
-		$ConfigLogLevel = "INFO"
+		$script:ConfigLogLevel = "INFO"
 	}
 
 	# Create logs path
-	$LogPath = if ($config.logging.path) { $config.logging.path } else { ".\logs" }
-	$LogFile = "$LogPath\install_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
+	$script:LogPath = if ($config.logging.path) { $config.logging.path } else { ".\logs" }
+	$script:LogFile = "$LogPath\install_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
 	New-Item -Path $LogPath -ItemType Directory -Force | Out-Null
 }
 
@@ -32,7 +32,7 @@ function Write-Log {
         [string]$Level = "INFO"
     )
     
-    if ($LogLevels[$Level] -lt $LogLevels[$ConfigLogLevel]) {
+    if ($script:LogLevels[$Level] -lt $script:LogLevels[$script:ConfigLogLevel]) {
         return
     }
     
@@ -48,7 +48,7 @@ function Write-Log {
     }
     
     # Write to file
-    Add-Content -Path $LogFile -Value $logEntry
+    Add-Content -Path $script:LogFile -Value $logEntry
 }
 
 # Add firewall rule if it does not exist REVIEW
@@ -75,19 +75,9 @@ function Should-Run([string]$name) {
 #######################
 
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    Write-Log "DHIS2 has to be installed as Administrator." -Level ERROR 
+    Write-Error "DHIS2 has to be installed as Administrator." 
     Exit 1
 }
-
-Write-Log "Set Execution Policies and Unblock powershell scripts" -Level DEBUG
-Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-Unblock-File -Path ".\JDK\install_openJDK.ps1"
-Unblock-File -Path ".\Tomcat\install_Tomcat.ps1"
-Unblock-File -Path ".\PostgreSQL\install_PostgreSQL.ps1"
-Unblock-File -Path ".\DHIS2\install_DHIS2.ps1"
-Unblock-File -Path ".\Nginx\install_Nginx.ps1"
-Unblock-File -Path ".\Prometheus\install_Prometheus.ps1"
 
 Write-Host "Loading config settings" -ForegroundColor White
 
@@ -102,6 +92,18 @@ try {
     Exit 1
 }
 
+Init-Logs
+
+Write-Log "Set Execution Policies and Unblock powershell scripts" -Level DEBUG
+Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+Unblock-File -Path ".\JDK\install_openJDK.ps1"
+Unblock-File -Path ".\Tomcat\install_Tomcat.ps1"
+Unblock-File -Path ".\PostgreSQL\install_PostgreSQL.ps1"
+Unblock-File -Path ".\DHIS2\install_DHIS2.ps1"
+Unblock-File -Path ".\Nginx\install_Nginx.ps1"
+Unblock-File -Path ".\Prometheus\install_Prometheus.ps1"
+
 Write-Log "Init DHIS2 installation...." -Level INFO
 $Root_Location = Get-Location
 
@@ -112,14 +114,12 @@ $Root_Location = Get-Location
 # 4000 -> Glowroot
 # 9090, 3000 -> Prometheus, Grafana
 Write-Log "Check used ports" -Level DEBUG
-$requiredPorts = @(80, 443, ${pg_port}, ${tomcat_port})
-if ($glowroot_enabled -ieq "Y") {
-    $requiredPorts += 4000
-}
-if ($prometheus_grafana_enabled -ieq "Y") {
-    $requiredPorts += 3000
-	$requiredPorts += 9090
-}
+$requiredPorts = @()
+if (Should-Run "nginx") { $requiredPorts += 80, 443 }
+if (Should-Run "postgresql") { $requiredPorts += $config.postgresql.port }
+if (Should-Run "tomcat") { $requiredPorts += $config.tomcat.port }
+if ($glowroot_enabled -ieq "Y") { $requiredPorts += 4000 }
+if ($prometheus_grafana_enabled -ieq "Y") { $requiredPorts += 3000, 9090 }
 foreach ($port in $requiredPorts) {
 	$inUse = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
 	if ($inUse) {
