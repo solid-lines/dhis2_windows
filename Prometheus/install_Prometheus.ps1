@@ -182,7 +182,7 @@ function Install-Prometheus {
 	# Download and unzip prometheus
 	Invoke-WebRequest -Uri $prometheusUrl -OutFile $prometheusZip
 	Expand-Archive -Path $prometheusZip -DestinationPath $prometheus_base_install_path -Force | Out-Null
-	Rename-Item -Path "${prometheus_base_install_path}\prometheus-${prometheus_version}.windows-amd64" -NewName "${prometheusInstallPath}" -Force
+	Move-Item -Path "${prometheus_base_install_path}\prometheus-${prometheus_version}.windows-amd64" -NewName "${prometheusInstallPath}" -Force
 	
 	# Config prometheus.yml
 	$prometheusConfig = @"
@@ -247,7 +247,7 @@ function Install-Grafana {
 	Invoke-WebRequest -Uri $grafanaUrl -OutFile $grafanaZip
 	Expand-Archive -Path $grafanaZip -DestinationPath $grafana_base_path -Force | Out-Null
 
-	Rename-Item -Path "C:\Program Files\grafana-v${grafana_version}" -NewName "${grafanaInstallPath}" -Force
+	Move-Item -Path "C:\Program Files\grafana-v${grafana_version}" -NewName "${grafanaInstallPath}" -Force
 	
 	# Create Grafana windows service
 	$current_path = Get-Location

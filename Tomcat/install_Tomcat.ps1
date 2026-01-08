@@ -87,7 +87,7 @@ function Install-Tomcat {
 	if (Test-Path $tomcat_install_path) {
 		Remove-Item -Path $tomcat_install_path -Recurse -Force | Out-Null
 	}
-	Rename-Item -Path $tomcat_install_old_path -NewName $tomcat_install_path -Force | Out-Null
+	Move-Item -Path $tomcat_install_old_path -NewName $tomcat_install_path -Force | Out-Null
 	
 	# remove al items in webapps folder
 	Get-ChildItem -Path "${tomcat_install_path}\webapps" -Recurse | Remove-Item -Recurse -Force | Out-Null
@@ -309,10 +309,11 @@ if (-Not ($service)) {
 	Write-Host "Creating Tomcat service '${tomcat_service_name}'"
 	cmd.exe /c "service.bat install ${tomcat_service_name}"
 }
+$tomcatExe = "tomcat${tomcat_base_version}.exe"
 if ($glowroot_enabled -ieq "Y") {
-	cmd.exe /c "tomcat9.exe //US//${tomcat_service_name} --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:'${tomcat_base_dir}\glowroot\glowroot.jar'`" --Startup=auto"
+cmd.exe /c "${tomcatExe} //US//${tomcat_service_name} --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} ++JvmOptions=`"-javaagent:'${tomcat_base_dir}\glowroot\glowroot.jar'`" --Startup=auto"
 } else {
-	cmd.exe /c "tomcat9.exe //US//${tomcat_service_name} --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} --Startup=auto"
+	cmd.exe /c "${tomcatExe} //US//${tomcat_service_name} --JvmMx=${tomcat_xmx} --JvmMs=${tomcat_xms} --Startup=auto"
 }
 Set-Location $current_path
 

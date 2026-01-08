@@ -66,7 +66,7 @@ $pg_username = $config.postgresql.username
 $pg_password = $config.postgresql.password
 $pg_service_name = $config.postgresql.service_name
 $pg_max_connections = $config.postgresql.max_connections
-$pg_memory = $config.postgresql.memory
+$pg_memory_gb = $config.postgresql.memory
 $pg_cpus = $config.postgresql.cpus
 $postgis_version = $config.postgresql.postgis_version
 $dhis2_version = $config.dhis2.version
@@ -107,7 +107,7 @@ try {
 
 # Install PostgreSQL, postgis and PGAdmin
 try {
-    .\PostgreSQL\install_PostgreSQL.ps1 -pg_version $pg_version -pg_username $pg_username -pg_password $pg_password -pg_port $pg_port -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -pg_memory $pg_memory -pg_cpus $pg_cpus -dhis2_db_name $dhis2_db_name -postgis_version $postgis_version
+    .\PostgreSQL\install_PostgreSQL.ps1 -pg_version $pg_version -pg_username $pg_username -pg_password $pg_password -pg_port $pg_port -pg_service_name $pg_service_name -pg_max_connections $pg_max_connections -pg_memory_gb $pg_memory_gb -pg_cpus $pg_cpus -dhis2_db_name $dhis2_db_name -postgis_version $postgis_version
 } catch {
     Write-Error "PostgreSQL $pg_version installation failed: $_"
 }

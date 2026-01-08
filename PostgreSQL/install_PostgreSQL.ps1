@@ -115,7 +115,7 @@ function Install-Postgis {
     Write-Output "Downloading and installing Postgis for PostgreSQL v${pg_version}..."
 
     $postgisURL = "https://download.osgeo.org/postgis/windows/pg${pg_version}/postgis-bundle-pg${pg_version}x64-setup-${postgis_version}-1.exe"
-    $postgisFile = ".\pg_${$pg_version}_postgis.exe"
+    $postgisFile = ".\pg_${pg_version}_postgis.exe"
 
     Invoke-WebRequest -Uri $postgisURL -OutFile $postgisFile
 

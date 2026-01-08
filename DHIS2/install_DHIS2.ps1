@@ -115,17 +115,17 @@ monitoring.cpu.enabled = on
 function Create-DHIS2-Database {
 	Write-Host "Creating and configuring DHIS2 database"
 
-	$checkRoleCommand = "& 'C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe' -h localhost -U ${pg_username} -tAc `"SELECT 1 FROM pg_roles WHERE rolname='${dhis2_db_username}';`""
+	$checkRoleCommand = "& 'C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe' -h ${pg_host} -U ${pg_username} -tAc `"SELECT 1 FROM pg_roles WHERE rolname='${dhis2_db_username}';`""
 	try {
 		# Check if Role already exists
 		$roleExists = Invoke-Expression $checkRoleCommand
 		
 		if ($roleExists -match "1") {
 			Write-Output "Role '${dhis2_db_username}' already exists in PostgreSQL. Updating password"
-			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -c "ALTER ROLE ${dhis2_db_username} WITH PASSWORD '${dhis2_db_password}';"
+			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "ALTER ROLE ${dhis2_db_username} WITH PASSWORD '${dhis2_db_password}';"
 		} else {
 			Write-Output "Creating Role '${dhis2_db_username}' in PostgreSQL"
-			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -c "CREATE ROLE ${dhis2_db_username} WITH LOGIN PASSWORD '${dhis2_db_password}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "CREATE ROLE ${dhis2_db_username} WITH LOGIN PASSWORD '${dhis2_db_password}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
 		}
 	} catch {
 		Write-Error "Error creating dhis role."
@@ -133,7 +133,7 @@ function Create-DHIS2-Database {
 	
 	# Create DHIS2 databse in PostgreSQL
 	Write-Host "Creating DHIS2 database..."
-	$checkDbCommand = "& 'C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe' -h localhost -U ${pg_username} -tAc `"SELECT 1 FROM pg_database WHERE datname='${dhis2_db_name}';`""
+	$checkDbCommand = "& 'C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe' -h ${pg_host}  -U ${pg_username} -tAc `"SELECT 1 FROM pg_database WHERE datname='${dhis2_db_name}';`""
 
 	try {
 		# Check if database already exists
@@ -141,11 +141,11 @@ function Create-DHIS2-Database {
 
 		if ($dbExists -match "1") {
 			Write-Output "Database '${dhis2_db_name}' already exists in PostgreSQL. Dropping database"
-			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE datname = '${dhis2_db_name}';"
-			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -c "DROP DATABASE ${dhis2_db_name};"
+			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE datname = '${dhis2_db_name}';"
+			& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "DROP DATABASE ${dhis2_db_name};"
 		}
 		Write-Output "Creating database '${dhis2_db_name}' in PostgreSQL"
-		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -c "CREATE DATABASE ${dhis2_db_name} OWNER ${dhis2_db_username};"
+		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -c "CREATE DATABASE ${dhis2_db_name} OWNER ${dhis2_db_username};"
 	} catch {
 		Write-Error "Error creating dhis2 database."
 	}
@@ -153,10 +153,10 @@ function Create-DHIS2-Database {
 	# Create extensions
 	Write-Host "Creating postgres extensions for DHIS2..."
 	try {
-		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS postgis;"
-		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS btree_gin;"
-		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
-		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h localhost -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
+		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS btree_gin;"
+		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+		& "C:\Program Files\PostgreSQL\${pg_version}\bin\psql.exe" -h ${pg_host}  -U ${pg_username} -d ${dhis2_db_name} -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
 	} catch {
 		Write-Error "Error creating postgres extension in DHIS2 database."
 	}
@@ -167,7 +167,7 @@ function Create-DHIS2-Database {
 		New-Item -ItemType Directory -Path (Split-Path -Path ${pgpass_path}) -Force | Out-Null
 	}
 	$current_pgpass_entries = Get-Content -Path ${pgpass_path}
-	$dhis2_entry = "localhost:${pg_port}:${dhis2_db_name}:${dhis2_db_username}:${dhis2_db_password}"
+	$dhis2_entry = "${pg_host} :${pg_port}:${dhis2_db_name}:${dhis2_db_username}:${dhis2_db_password}"
 	if (-not (${current_pgpass_entries} -contains ${dhis2_entry})) {
 		Add-Content -Path ${pgpass_path} -Value ${dhis2_entry}
 	}
