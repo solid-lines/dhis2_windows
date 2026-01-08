@@ -9,7 +9,7 @@ New-Item -Path ".\logs" -ItemType Directory -Force | Out-Null
 function Write-Log {
     param(
         [string]$Message,
-        [ValidateSet("INFO","WARN","ERROR")]
+        [ValidateSet("DEBUG","INFO","WARN","ERROR")]
         [string]$Level = "INFO"
     )
     
@@ -18,9 +18,10 @@ function Write-Log {
     
     # Write to console
     switch ($Level) {
-        "INFO"  { Write-Log $logEntry -ForegroundColor White }
-        "WARN"  { Write-Log $logEntry -ForegroundColor Yellow }
-        "ERROR" { Write-Log $logEntry -ForegroundColor Red }
+        "DEBUG" { Write-Host $logEntry -ForegroundColor Yellow }
+        "INFO"  { Write-Host $logEntry -ForegroundColor White }
+        "WARN"  { Write-Host $logEntry -ForegroundColor Orange }
+        "ERROR" { Write-Host $logEntry -ForegroundColor Red }
     }
     
     # Write to file
@@ -50,6 +51,7 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     Exit 1
 }
 
+Write-Log "Set Execution Policies and Unblock powershell scripts" -Level DEBUG
 Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 Unblock-File -Path ".\JDK\install_openJDK.ps1"
@@ -73,6 +75,7 @@ $jdk_version = $config.jdk.version
 $tomcat_version = $config.tomcat.version
 $tomcat_path = $config.tomcat.path
 $tomcat_service_name = $config.tomcat.service_name
+$tomcat_port = $config.tomcat.port
 $tomcat_xmx = $config.tomcat.xmx
 $tomcat_xms = $config.tomcat.xms
 $tomcat_username = $config.tomcat.username
@@ -106,12 +109,29 @@ $proxy_hostname = $config.proxy.hostname
 $proxy_service_name = $config.proxy.service_name
 
 # Check used ports
-$requiredPorts = @(80, 443, 5432, 8080, 3000, 4000, 9090)
+# 80, 443 -> nginx
+# 8080 -> Tomcat
+# 5432 -> postgresql
+# 4000 -> Glowroot
+# 9090, 3000 -> Prometheus, Grafana
+$requiredPorts = @(80, 443, ${pg_port}, ${tomcat_port})
+if ($glowroot_enabled -ieq "Y") {
+    $requiredPorts += 4000
+}
+if ($prometheus_grafana_enabled -ieq "Y") {
+    $requiredPorts += 3000
+	$requiredPorts += 9090
+}
 foreach ($port in $requiredPorts) {
 	$inUse = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
 	if ($inUse) {
-		$errors += "Puerto $port ya está en uso"
+		$portsused += "Port $port already in use"
 	}
+}
+if ($portsused.Count -gt 0) {
+        Write-Log "Ports in use. Review services and configuration." -Level ERROR 
+        $portsused | ForEach-Object { Write-Log "  - $_" -Level ERROR }
+        Exit 1
 }
 
 # If hostname is not localhost, create firewall rules to open ports 80 and 443
@@ -132,7 +152,7 @@ try {
 
 # Install Tomcat and Glowroot
 try {
-    .\Tomcat\install_Tomcat.ps1 -tomcat_version $tomcat_version -tomcat_service_name $tomcat_service_name -tomcat_path $tomcat_path -tomcat_xmx $tomcat_xmx -tomcat_xms $tomcat_xms -tomcat_username $tomcat_username -tomcat_password $tomcat_password -glowroot_enabled $glowroot_enabled -glowroot_version $glowroot_version -glowroot_username $glowroot_username -glowroot_password $glowroot_password
+    .\Tomcat\install_Tomcat.ps1 -tomcat_version $tomcat_version -tomcat_service_name $tomcat_service_name -tomcat_port $tomcat_port -tomcat_path $tomcat_path -tomcat_xmx $tomcat_xmx -tomcat_xms $tomcat_xms -tomcat_username $tomcat_username -tomcat_password $tomcat_password -glowroot_enabled $glowroot_enabled -glowroot_version $glowroot_version -glowroot_username $glowroot_username -glowroot_password $glowroot_password
 } catch {
     Write-Log "Tomcat $tomcat_version installation failed: $_" -Level ERROR 
 }

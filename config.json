@@ -3,9 +3,10 @@
     "version": "17"
   },
   "tomcat": {
-    "version": "9.0.100",
+    "version": "10.1.50",
 	"path": "latest",
-	"service_name": "Tomcat",
+	"service_name": "Tomcat10",
+	"port": "8080"
 	"xmx": "4096",
 	"xms": "2048",
 	"username": "admin",
@@ -37,7 +38,7 @@
 	"postgis_version": "3.5.2"
   },
   "dhis2": {
-    "version": "40.6.0",
+    "version": "42.3.1",
 	"home": "C:\\dhis2-home",
 	"path": "ROOT",
 	"db_name": "dhis2",
@@ -48,6 +49,6 @@
 	  "name": "nginx",
 	  "service_name": "Nginx",
 	  "version": "1.28.1",
-	  "hostname": "windows.dhis2..solidlines.io"
+	  "hostname": "windows.dhis2.solidlines.io"
   }
 }

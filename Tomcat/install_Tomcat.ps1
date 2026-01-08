@@ -5,6 +5,7 @@ param (
     [string]$tomcat_version,
 	[string]$tomcat_path,
     [string]$tomcat_service_name,
+	[string]$tomcat_port,
 	[string]$tomcat_xmx,
 	[string]$tomcat_xms,
 	[string]$tomcat_username,
@@ -133,7 +134,7 @@ function Install-Tomcat {
 	<Service name="Catalina">
 		<Executor	name="tomcatThreadPool"	namePrefix="tomcat-http-"
 					maxThreads="200" minSpareThreads="10" />                     
-		<Connector 	port="8080"	protocol="HTTP/1.1"
+		<Connector 	port="${tomcat_port}"	protocol="HTTP/1.1"
 					proxyPort="443"	scheme="https" 
 					URIEncoding="UTF-8" executor="tomcatThreadPool"
 					connectionTimeout="20000" relaxedQueryChars="[,]"/>
