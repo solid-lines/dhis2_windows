@@ -91,7 +91,7 @@ function Install-Tomcat {
 	if (Test-Path $tomcat_install_path) {
 		Remove-Item -Path $tomcat_install_path -Recurse -Force | Out-Null
 	}
-	Move-Item -Path $tomcat_install_old_path -NewName $tomcat_install_path -Force | Out-Null
+	Rename-Item -Path $tomcat_install_old_path -NewName $tomcat_install_path -Force | Out-Null
 	
 	# remove al items in webapps folder
 	Get-ChildItem -Path "${tomcat_install_path}\webapps" -Recurse | Remove-Item -Recurse -Force | Out-Null

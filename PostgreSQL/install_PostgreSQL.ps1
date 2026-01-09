@@ -52,7 +52,7 @@ function Get-PostgreSQL-Versions {
 	$url = "https://www.enterprisedb.com/downloads/postgres-postgresql-downloads"
 	
 	# Dopwnload HTML and get content
-	$response = Invoke-WebRequest -Uri $url -UseBasicParsing -UseBasicParsing -ErrorAction Stop
+	$response = Invoke-WebRequest -Uri $url -UseBasicParsing -ErrorAction Stop
 	$htmlContent = $response.Content
 	[xml]$html = $htmlContent
 	$table = $html.getElementsByTagName("table")[0]
@@ -117,11 +117,27 @@ function Install-PostgreSQL {
 # Install Postgis
 function Install-Postgis {	
     Write-Log "Downloading and installing Postgis for PostgreSQL v${pg_version}..." -Level INFO
-
-    $postgisURL = "https://download.osgeo.org/postgis/windows/pg${pg_version}/postgis-bundle-pg${pg_version}x64-setup-${postgis_version}-1.exe"
+	
+    $base = "https://ftp.osuosl.org/pub/osgeo/download/postgis/windows/pg${pg_version}"
+    $file = "postgis-bundle-pg${pg_version}x64-setup-${postgis_version}-1.exe"
     $postgisFile = ".\pg_${pg_version}_postgis.exe"
 
-    Invoke-WebRequest -Uri $postgisURL -OutFile $postgisFile -UseBasicParsing -ErrorAction Stop
+    $urls = @(
+        "$base/$file",
+        "$base/archive/$file"
+    )
+
+    $downloaded = $false
+    foreach ($u in $urls) {
+        try {
+            Write-Log "Trying: $u" -Level DEBUG
+            Invoke-WebRequest -Uri $u -OutFile $postgisFile -UseBasicParsing -ErrorAction Stop
+            $downloaded = $true
+            break
+        } catch {
+            Write-Log "Not found or failed: $u ($($_.Exception.Message))" -Level WARN
+        }
+    }
 
     Start-Process -FilePath $postgisFile -ArgumentList "/S" -Wait
 }

@@ -4,7 +4,7 @@
 
 function Init-Logs {
 	# Log Levels
-	$script:LogLevels = @{
+	$global:LogLevels = @{
 		"DEBUG" = 0
 		"INFO"  = 1
 		"WARN"  = 2
@@ -12,16 +12,16 @@ function Init-Logs {
 	}
 	
 	# Get Log Level from config.json (default: INFO)
-	$script:ConfigLogLevel = if ($config.logging.level) { $config.logging.level.ToUpper() } else { "INFO" }
+	$global:ConfigLogLevel = if ($config.logging.level) { $config.logging.level.ToUpper() } else { "INFO" }
 
-	if (-not $script:LogLevels.ContainsKey($script:ConfigLogLevel)) {
+	if (-not $global:LogLevels.ContainsKey($global:ConfigLogLevel)) {
 		Write-Host "Invalid log level '$ConfigLogLevel'. Using INFO." -ForegroundColor Yellow
-		$script:ConfigLogLevel = "INFO"
+		$global:ConfigLogLevel = "INFO"
 	}
 
 	# Create logs path
-	$script:LogPath = if ($config.logging.path) { $config.logging.path } else { ".\logs" }
-	$script:LogFile = "$LogPath\install_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
+	$global:LogPath = if ($config.logging.path) { $config.logging.path } else { ".\logs" }
+	$global:LogFile = "$LogPath\install_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
 	New-Item -Path $LogPath -ItemType Directory -Force | Out-Null
 }
 
@@ -32,7 +32,7 @@ function Write-Log {
         [string]$Level = "INFO"
     )
     
-    if ($script:LogLevels[$Level] -lt $script:LogLevels[$script:ConfigLogLevel]) {
+    if ($global:LogLevels[$Level] -lt $global:LogLevels[$global:ConfigLogLevel]) {
         return
     }
     
@@ -48,7 +48,7 @@ function Write-Log {
     }
     
     # Write to file
-    Add-Content -Path $script:LogFile -Value $logEntry
+    Add-Content -Path $global:LogFile -Value $logEntry
 }
 
 # Add firewall rule if it does not exist REVIEW
@@ -143,7 +143,7 @@ if (${proxy_hostname} -ne "localhost") {
 
 try {
   if (Should-Run "jdk") {
-    & (Join-Path $Root_Location "JDK\install_OpenJDK.ps1") -Config $config
+    & (Join-Path $Root_Location "JDK\install_openJDK.ps1") -Config $config
   }
   if (Should-Run "postgresql") {
     & (Join-Path $Root_Location "PostgreSQL\install_PostgreSQL.ps1") -Config $config
@@ -164,7 +164,7 @@ try {
   Write-Log "Installation finished successfully!" -Level INFO
 } catch {
   Write-Log "Installation fail: $($_.Exception.Message)" -Level ERROR 
-  throw
-} finally {
-  Stop-Transcript | Out-Null
+  Write-Log "Position: $($_.InvocationInfo.PositionMessage)" -Level ERROR
+  Write-Log "Stack: $($_.ScriptStackTrace)" -Level ERROR
+  Exit 1
 }

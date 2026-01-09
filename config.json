@@ -46,7 +46,7 @@
 	"memory": "10",
 	"cpus": "3",
 	"port": "5432",
-	"postgis_version": "3.5.2"
+	"postgis_version": "3.6.1"
   },
   "dhis2": {
     "version": "42.3.1",

@@ -1,0 +1,65 @@
+{
+  "components": {
+    "jdk": true,
+    "postgresql": true,
+    "tomcat": true,
+    "dhis2": true,
+    "nginx": true
+  },
+  "logging": {
+    "level": "INFO",
+    "path": ".\\logs"
+  },
+  "jdk": {
+    "version": "17" 				// Version de Java (17 recomendado para DHIS2 40+)
+  },
+  "tomcat": {
+    "version": "10.1.50", 			// Apache Tomcat version
+	"path": "latest", 				// Install path
+	"service_name": "Tomcat10",		// Apache Tomcat service name
+	"port": "8080",					// Apache Tomcat connector port
+	"xmx": "4096",					// Apache Tomcat max memory size (MB)
+	"xms": "2048",					// Apache Tomcat initial memory size (MB)
+	"username": "admin",			// Apache Tomcat manager username
+	"password": "changeme"			// Apache Tomcat manager password. Should be changed!!
+  },
+  "monitoring": {
+    "glowroot": {
+      "enabled": "Y",				// Define if Glowroot is installed or not
+      "version": "0.14.2",			// Glowroot APM version
+      "username": "admin",			// Glowroot APM username
+      "password": "changeme"		// Glowroot APM password. Should be changed!!
+    },
+    "prometheus_grafana": {
+      "enabled": "Y",				// Define if Prometheus/Grafana is installed or not
+      "prometheus_version": "3.1.0",// Prometheus version
+      "grafana_version": "11.5.1"	// Grafana version
+    }
+  },
+  "postgresql": {
+    "version": "16",				// PostgreSQL version
+	"host": "localhost",
+	"username": "postgres",			// PostgreSQL admin user
+	"password": "changeme",			// PostgreSQL admin password. Should be changed!!
+	"service_name": "Postgres16",	// PostgreSQL service name
+	"max_connections": "80",		// PostgreSQL max connections
+	"memory": "10",					// PostgreSQL memory size (GB)
+	"cpus": "3",					// PostgreSQL CPUs
+	"port": "5432",
+	"postgis_version": "3.6.1"		// PostGIS version
+  },
+  "dhis2": {
+    "version": "42.3.1",			// DHIS2 version
+	"home": "C:\\dhis2-home",		// DHIS2 HOME
+	"path": "ROOT",
+	"db_name": "dhis2",				// DHIS2 database name
+	"db_username": "dhis",			// DHIS2 database username
+	"db_password": "changeme"		// DHIS2 database password. Should be changed!!
+  },
+  "proxy": {
+	  "name": "nginx",
+	  "service_name": "Nginx",
+	  "version": "1.28.1",
+	  "hostname": "windows.dhis2.solidlines.io"
+  }
+}
