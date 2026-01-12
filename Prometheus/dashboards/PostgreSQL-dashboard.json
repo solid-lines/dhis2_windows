@@ -1,4 +1,47 @@
 {
+	  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.5.1"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -37,7 +80,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "PostgreSQL version",
       "fieldConfig": {
@@ -100,7 +143,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "pg_static{instance=\"$instance\"}",
@@ -117,7 +160,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -179,7 +222,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "sum(pg_stat_database_tup_fetched{datname=\"$datname\", instance=\"$instance\"})",
           "format": "time_series",
@@ -194,7 +237,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -252,7 +295,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "sum(pg_stat_database_tup_inserted{datname=\"$datname\", instance=\"$instance\"})",
@@ -269,7 +312,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -331,7 +374,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "sum(pg_stat_database_tup_updated{datname=\"$datname\", instance=\"$instance\"})",
           "format": "time_series",
@@ -346,7 +389,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Average user and system CPU time spent in seconds.",
       "fieldConfig": {
@@ -436,7 +479,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "avg(rate(process_cpu_seconds_total{instance=\"$instance\"}[5m]) * 1000)",
@@ -453,7 +496,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Virtual and Resident memory size in bytes, averages over 5 min interval",
       "fieldConfig": {
@@ -542,7 +585,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -557,7 +600,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "avg(rate(process_virtual_memory_bytes{instance=\"$instance\"}[5m]))",
@@ -574,7 +617,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Number of open file descriptors",
       "fieldConfig": {
@@ -664,7 +707,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -698,7 +741,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -760,7 +803,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "pg_settings_max_connections{instance=\"$instance\"}",
@@ -776,7 +819,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -838,7 +881,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_shared_buffers_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -852,7 +895,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -914,7 +957,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_effective_cache_size_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -928,7 +971,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -990,7 +1033,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_work_mem_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -1005,7 +1048,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1067,7 +1110,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_maintenance_work_mem_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -1081,7 +1124,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1143,7 +1186,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_max_parallel_workers{instance=\"$instance\"}",
           "format": "time_series",
@@ -1157,7 +1200,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1219,7 +1262,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_max_worker_processes{instance=\"$instance\"}",
           "format": "time_series",
@@ -1233,7 +1276,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1295,7 +1338,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_seq_page_cost{instance=\"$instance\"}",
           "format": "time_series",
@@ -1309,7 +1352,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1371,7 +1414,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_random_page_cost{instance=\"$instance\"}",
           "format": "time_series",
@@ -1385,7 +1428,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1443,7 +1486,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "pg_settings_min_wal_size_bytes{instance=\"$instance\"}",
@@ -1459,7 +1502,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1522,7 +1565,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "expr": "pg_settings_max_wal_size_bytes{instance=\"$instance\"}",
           "format": "time_series",
@@ -1536,7 +1579,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -1594,7 +1637,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "pg_settings_wal_buffers_bytes{instance=\"$instance\"}",
@@ -1623,7 +1666,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Number of connections per state",
       "fieldConfig": {
@@ -1714,7 +1757,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1740,7 +1783,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Number of transactions that have been commited or rollbacked",
       "fieldConfig": {
@@ -1825,7 +1868,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -1843,7 +1886,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -1865,7 +1908,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Transactions rate in database",
       "fieldConfig": {
@@ -1929,7 +1972,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "dsType": "prometheus",
           "editorMode": "code",
@@ -1992,7 +2035,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Tuples fetched per second",
       "fieldConfig": {
@@ -2077,7 +2120,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2099,7 +2142,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Tuples inserted per second",
       "fieldConfig": {
@@ -2184,7 +2227,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "sum(rate(pg_stat_database_tup_inserted{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
@@ -2202,7 +2245,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Tuples updated per second",
       "fieldConfig": {
@@ -2287,7 +2330,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "sum(rate(pg_stat_database_tup_updated{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
@@ -2305,7 +2348,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Tuples returned per second",
       "fieldConfig": {
@@ -2390,7 +2433,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "sum(rate(pg_stat_database_tup_returned{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
@@ -2408,7 +2451,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Tuples deleted per second",
       "fieldConfig": {
@@ -2493,7 +2536,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "sum(rate(pg_stat_database_tup_deleted{datname=~\"$datname\",instance=~\"$instance\"}[1m]))",
@@ -2511,7 +2554,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "PostgreSQL Cache Hit Rate",
       "fieldConfig": {
@@ -2595,7 +2638,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "sum(pg_stat_database_blks_hit{datname=~\"$datname\",instance=~\"$instance\"}) / (sum(pg_stat_database_blks_hit{datname=~\"$datname\",instance=~\"$instance\"}) + sum(pg_stat_database_blks_read{datname=~\"$datname\",instance=~\"$instance\"}))",
@@ -2612,7 +2655,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Buffers metrics",
       "fieldConfig": {
@@ -2700,7 +2743,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_backend_total{instance=\"$instance\"}[5m]) != 0",
@@ -2713,7 +2756,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_alloc_total{instance=\"$instance\"}[5m]) != 0",
@@ -2726,7 +2769,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_backend_fsync_total{instance=\"$instance\"}[5m]) != 0",
@@ -2739,7 +2782,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_checkpoint_total{instance=\"$instance\"}[5m]) != 0",
@@ -2752,7 +2795,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "irate(pg_stat_bgwriter_buffers_clean_total{instance=\"$instance\"}[5m]) != 0",
@@ -2769,7 +2812,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "description": "Total amount of data written to temporary files by queries in this database. All temporary files are counted, regardless of why the temporary file was created, and regardless of the log_temp_files setting.",
       "fieldConfig": {
@@ -2854,7 +2897,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -2876,7 +2919,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -2962,7 +3005,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -2985,7 +3028,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -3070,7 +3113,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "pg_database_size_bytes{datname=~\"$datname\",instance=~\"$instance\"}",
@@ -3085,7 +3128,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -3173,7 +3216,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -3190,7 +3233,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -3211,7 +3254,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -3299,7 +3342,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -3316,7 +3359,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -3350,7 +3393,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -3435,7 +3478,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3454,7 +3497,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -3551,7 +3594,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3639,7 +3682,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -3746,7 +3789,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3839,7 +3882,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -3935,7 +3978,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -4026,7 +4069,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheusds"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -4122,7 +4165,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheusds"
+            "uid": ""
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -4250,7 +4293,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheusds"
+          "uid": ""
         },
         "definition": "label_values(pg_database_size_bytes{datname!~\"template.*|postgres\"},datname)",
         "includeAll": true,
@@ -4276,8 +4319,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "PostgreSQL Database",
-  "uid": "DHIS2-PostgreSL-Dashboard",
+  "title": "PostgreSQL-Dashboard",
+  "uid": "PostgreSQL-Dashboard",
   "version": 3,
   "weekStart": ""
 }
