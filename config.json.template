@@ -31,7 +31,7 @@
       "password": "changeme"					// Glowroot APM password. Should be changed!!
     },			
     "prometheus_grafana": {			
-      "enabled": "Y",							// Define if Prometheus/Grafana is installed or not
+      "enabled": "N",							// Define if Prometheus/Grafana is installed or not
       "prometheus_version": "3.1.0",			// Prometheus version
       "grafana_version": "11.5.1"				// Grafana version
     }			

@@ -7,7 +7,7 @@
     "nginx": true
   },
   "logging": {
-    "level": "INFO",
+    "level": "DEBUG",
     "path": ".\\logs"
   },
   "jdk": {
@@ -31,7 +31,7 @@
       "password": "changeme"
     },
     "prometheus_grafana": {
-      "enabled": "Y",
+      "enabled": "N",
       "prometheus_version": "3.1.0",
       "grafana_version": "11.5.1"
     }
