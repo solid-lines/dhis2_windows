@@ -50,25 +50,23 @@ if (-not (Is-JdkInstalled)) {
 
     # Download OpenJDK Package
     $download_url = $latest_jdk.binaries.package.link
-    $downloaded_file = ".\OpenJDK-${jdk_version}.zip"
+    $downloaded_file = ".\downloads\OpenJDK-${jdk_version}.zip"
     Write-Log "Download OpenJDK package from: ${download_url}" -Level INFO
     Invoke-WebRequest -Uri $download_url -OutFile $downloaded_file -UseBasicParsing -ErrorAction Stop
 
     # Install OpenJDK
     Write-Log "Unzipping OpenJDK ${jdk_version} binaries package..." -Level INFO
 	Add-Type -AssemblyName System.IO.Compression.FileSystem
-	$downloaded_file_path = Get-Location 
-	$zip_file = "${downloaded_file_path}\${downloaded_file}"
-	$zipArchive = [System.IO.Compression.ZipFile]::OpenRead(${zip_file})
+	$zipArchive = [System.IO.Compression.ZipFile]::OpenRead(${downloaded_file})
 	$entries = $zipArchive.Entries
 	$folderName = $entries | Where-Object { $_.FullName -match '/$' } | Select-Object -First 1
 
 	$java_installation_path = "C:\Program Files\Java\"
 	Expand-Archive -Path $downloaded_file -DestinationPath $java_installation_path -Force
-    #Remove-Item -Path ${downloaded_file} -Recurse -Force
 
 	$java_home_path = "${java_installation_path}\${folderName}"
     # Config JAVA_HOME environment variable
+	Write-Log "Set JAVA_HOME environment variable: ${java_home_path}" -Level DEBUG
     $Env:JAVA_HOME = ${java_home_path}
     [Environment]::SetEnvironmentVariable("JAVA_HOME", $java_home_path, "Machine")
     [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";${java_home_path}\bin\", "Machine")

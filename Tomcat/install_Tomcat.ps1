@@ -23,13 +23,13 @@ $glowroot_password = [string]$glowroot.password
 $tomcat_base_version = $tomcat_version.Split(".")[0]
 $tomcat_base_url = "https://dlcdn.apache.org/tomcat/tomcat-${tomcat_base_version}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip"
 $tomcat_archive_url = "https://archive.apache.org/dist/tomcat/tomcat-${tomcat_base_version}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip"
-$tomcat_download_file = ".\${tomcat_path}.zip"
+$tomcat_download_file = ".\downloads\${tomcat_path}.zip"
 $tomcat_base_dir = "C:\Program Files\Tomcat"
 $tomcat_install_path = "C:\Program Files\Tomcat\${tomcat_path}"
 $glowroot_url = "https://github.com/glowroot/glowroot/releases/download/v${glowroot_version}/glowroot-${glowroot_version}-dist.zip"
-$glowroot_download_file = ".\glowroot-${glowroot_version}.zip"
+$glowroot_download_file = ".\downloads\glowroot-${glowroot_version}.zip"
 $glowroot_central_url = "https://github.com/glowroot/glowroot/releases/download/v${glowroot_version}/glowroot-central-${glowroot_version}-dist.zip"
-$glowroot_central_download_file = ".\glowroot-central-${glowroot_version}.zip"
+$glowroot_central_download_file = ".\downloads\glowroot-central-${glowroot_version}.zip"
 
 #######################
 # Functions
@@ -97,7 +97,7 @@ function Install-Tomcat {
 	Get-ChildItem -Path "${tomcat_install_path}\webapps" -Recurse | Remove-Item -Recurse -Force | Out-Null
 	
 	# Update tomcat-users.xml
-	Write-Log "Updating tomcat-users.xml..." -Level INFO
+	Write-Log "Updating tomcat-users.xml..." -Level DEBUG
 	$tomcat_users_file = "${tomcat_install_path}\conf\tomcat-users.xml"
 	Set-Content -Path $tomcat_users_file -Value @"
 <tomcat-users xmlns="http://tomcat.apache.org/xml"
@@ -111,7 +111,7 @@ function Install-Tomcat {
 "@
 	
 	# Update server.xml
-	Write-Log "Updating server.xml..." -Level INFO
+	Write-Log "Updating server.xml..." -Level DEBUG
 	$tomcat_server_file = "${tomcat_install_path}\conf\server.xml"
 	#$server_template_file = ".\server_template.xml"
 	#$server_template_content = Get-Content -Path ${server_template_file} -Raw
@@ -163,7 +163,7 @@ function Install-Tomcat {
 "@
 
 	# Update logging.properties
-	Write-Log "Updating logging.properties..." -Level INFO
+	Write-Log "Updating logging.properties..." -Level DEBUG
 	$tomcat_logging_file = "${tomcat_install_path}\conf\logging.properties"
 	Set-Content -Path $tomcat_logging_file -Value @"
 handlers = 1catalina.org.apache.juli.AsyncFileHandler, 2localhost.org.apache.juli.AsyncFileHandler, java.util.logging.ConsoleHandler

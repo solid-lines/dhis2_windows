@@ -18,7 +18,7 @@ $pg_cpus = [string]$postgresql.cpus
 $postgis_version = [string]$postgresql.postgis_version
 $dhis2_db_name = [string]$dhis2.db_name
 
-$pg_download_file = ".\postgresql_${pg_version}_installer.exe"
+$pg_download_file = ".\downloads\postgresql_${pg_version}_installer.exe"
 $pg_install_path = "C:\Program Files\PostgreSQL\${pg_version}"
 
 #######################
@@ -80,7 +80,7 @@ function Get-PostgreSQL-Versions {
 	
 	# Save postgresql versions and links to a json file
 	$jsonOutput = $data | ConvertTo-Json -Depth 10 -Compress
-	$jsonFilePath = ".\postgresql_versions.json"
+	$jsonFilePath = ".\downloads\postgresql_versions.json"
 	Set-Content -Path $jsonFilePath -Value $jsonOutput
 	
 	return $data
@@ -88,7 +88,7 @@ function Get-PostgreSQL-Versions {
 
 # Get download link of a given postgresql version
 function Get-PostgreSQL-DownloadLink {
-	$jsonFilePath = ".\postgresql_versions.json"
+	$jsonFilePath = ".\downloads\postgresql_versions.json"
 	$jsonContent = Get-Content -Path $jsonFilePath -Raw | ConvertFrom-Json
 	$filteredLink = $jsonContent | Where-Object { $_.version -like "${pg_version}*" } | Select-Object -ExpandProperty download_link
    
@@ -103,7 +103,7 @@ function Get-PostgreSQL-DownloadLink {
 function Install-PostgreSQL {
 	$data = Get-PostgreSQL-Versions
 	$downloadLink = Get-PostgreSQL-DownloadLink
-	$pgDownloadFile = ".\postgresql_${pg_version}_installer.exe"
+	$pgDownloadFile = ".\downloads\postgresql_${pg_version}_installer.exe"
 	Write-Log "Downloading PostgreSQL v${pg_version}..." -Level INFO
 
 	Invoke-WebRequest -Uri ${downloadLink} -OutFile ${pgDownloadFile} -UseBasicParsing -ErrorAction Stop
@@ -111,7 +111,6 @@ function Install-PostgreSQL {
 	# Install POstgreSQL, Postgis and PGAdmin. Create PostgreSQL service
 	Write-Log "Installing PostgreSQL v${pg_version}..." -Level INFO
 	Start-Process ${pgDownloadFile} -ArgumentList "--mode unattended", "--unattendedmodeui none", "--superpassword `"${pg_password}`"", "--serverport ${pg_port}", "--servicename `"${pg_service_name}`"", "--superaccount `"${pg_username}`"" -Wait;
-	#Remove-Item -Path ${pgDownloadFile}
 }
 
 # Install Postgis
@@ -120,7 +119,7 @@ function Install-Postgis {
 	
     $base = "https://ftp.osuosl.org/pub/osgeo/download/postgis/windows/pg${pg_version}"
     $file = "postgis-bundle-pg${pg_version}x64-setup-${postgis_version}-1.exe"
-    $postgisFile = ".\pg_${pg_version}_postgis.exe"
+    $postgisFile = ".\downloads\pg_${pg_version}_postgis.exe"
 
     $urls = @(
         "$base/$file",
@@ -216,8 +215,11 @@ track_activity_query_size = 8192
 shared_preload_libraries = 'pg_stat_statements'
 "@
 
+	Write-Log "Set PostgreSQL tune config settings: \n${config_pgtune_content}" -Level DEBUG
 	Set-Content -Path $config_pgtune_file -Value $config_pgtune_content
+	Write-Log "Set PostgreSQL logging config settings: \n${config_logging_content}" -Level DEBUG
 	Set-Content -Path $config_logging_file -Value $config_logging_content
+	Write-Log "Set PostgreSQL dhis2 config settings: \n${config_dhis2_content}" -Level DEBUG
     Set-Content -Path $config_dhis2_file -Value $config_dhis2_content
 }
 

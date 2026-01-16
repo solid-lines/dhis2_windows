@@ -74,6 +74,17 @@ function Should-Run([string]$name) {
 	return [bool]$config.components.$name
 }
 
+# Check if URL exists
+function Check-UrlExists {
+    param ([string]$url)
+    try {
+        $response = Invoke-WebRequest -Uri $url -Method Head -UseBasicParsing -ErrorAction Stop
+        return $true
+    } catch {
+        return $false
+    }
+}
+
 #######################
 # Script
 #######################
