@@ -1,9 +1,8 @@
 # DHIS2 Automated Installation on Windows
 
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue.svg)](https://docs.microsoft.com/powershell/)
-[![Windows Server](https://img.shields.io/badge/Windows%20Server-2019%2F2022-0078D6.svg)](https://www.microsoft.com/windows-server)
+[![Windows Server](https://img.shields.io/badge/Windows%20Server-2022%2F2025-0078D6.svg)](https://www.microsoft.com/windows-server)
 [![DHIS2](https://img.shields.io/badge/DHIS2-2.35--42.x-00796B.svg)](https://dhis2.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Automated deployment script for DHIS2 on Windows Server, including all required components: JDK, Tomcat, PostgreSQL/PostGIS, Nginx, and optional monitoring tools.
 
@@ -15,11 +14,10 @@ Automated deployment script for DHIS2 on Windows Server, including all required 
 - [Version Compatibility](#version-compatibility)
 - [Access URLs](#access-urls)
 - [Troubleshooting](#troubleshooting)
-- [License](#license)
 
 ## 🔧 Prerequisites
 
-- Windows Server 2019/2022 or Windows 10/11 Pro
+- Windows Server 2022/2025 or Windows 10/11 Pro
 - PowerShell 5.1 or higher
 - Administrator privileges
 - Internet connection
@@ -214,6 +212,8 @@ Get-Content "C:\Program Files\Tomcat\latest\logs\catalina.log" -Tail 50
 | Port already in use | Ensure ports 80, 443, 8080, 5432 are not occupied |
 | SSL certificate fails | Verify hostname DNS points to server IP |
 | Service won't start | Check Windows Event Viewer for errors |
+| Downloads failing (503/timeout) | add retries/backoff to URL checks and downloads |
+| config.json parsing errors | ensure it is valid JSON |
 
 ## 📁 Project Structure
 
@@ -241,10 +241,6 @@ After installation, ensure you:
 4. ✅ Review firewall rules
 5. ✅ Keep all components updated
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🤝 Support
 
 - **Issues:** [GitHub Issues](https://github.com/solid-lines/dhis2_windows/issues)
@@ -252,4 +248,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by [SolidLines](https://solidlines.io)
+Made by [SolidLines](https://solidlines.io)
