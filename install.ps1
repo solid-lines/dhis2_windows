@@ -85,7 +85,7 @@ function Check-UrlExists {
     for ($i = 1; $i -le $MaxRetries; $i++) {
 		
 		# TimeoutSec: Si el servidor tarda más de 10s en responder, cuenta como fallo
-		$response = Invoke-WebRequest -Uri $url -Method Head -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+		$response = Invoke-WebRequest -Uri $url -Method Head -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop | Out-Null
 		if ($response.StatusCode -eq 200) {
 			return $true
 		}
@@ -133,8 +133,10 @@ Unblock-File -Path ".\Nginx\install_Nginx.ps1"
 Unblock-File -Path ".\Prometheus\install_Prometheus.ps1"
 
 Write-Log "Init DHIS2 installation...." -Level INFO
-$root_location = (Get-Location).Path
+$root_location = Get-Location
+Write-Log "Root Lcoation: ${root_location}" -Level INFO
 $global:download_path = (Join-Path $root_location "downloads") + "\"
+Write-Log "Download Lcoation: ${download_path}" -Level INFO
 
 # Check used ports
 # 80, 443 -> nginx
