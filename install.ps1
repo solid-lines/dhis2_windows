@@ -148,6 +148,12 @@ if ($portsused.Count -gt 0) {
         Exit 1
 }
 
+# Check nssm URLs (Sometimes is not available)
+if ( -not (Check-UrlExists -url "https://nssm.cc/release/nssm-2.24.zip") ) {
+	Write-Log "NNSM installation file is not available. Please try the installation again later." -Level ERROR
+	exit 1
+}
+
 # If hostname is not localhost, create firewall rules to open ports 80 and 443
 if (${proxy_hostname} -ne "localhost") {
 	Write-Log "Adding firewall rules to allow HTTP and HTTPS connections." -Level INFO 
