@@ -133,8 +133,8 @@ Unblock-File -Path ".\Nginx\install_Nginx.ps1"
 Unblock-File -Path ".\Prometheus\install_Prometheus.ps1"
 
 Write-Log "Init DHIS2 installation...." -Level INFO
-$root_location = Get-Location
-$global:download_path = $root_location + "\downloads\"
+$root_location = (Get-Location).Path
+$global:download_path = (Join-Path $root_location "downloads") + "\"
 
 # Check used ports
 # 80, 443 -> nginx
