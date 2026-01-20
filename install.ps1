@@ -83,14 +83,14 @@ function Check-UrlExists {
     )
 
     for ($i = 1; $i -le $MaxRetries; $i++) {
-		
-		# TimeoutSec: Si el servidor tarda más de 10s en responder, cuenta como fallo
-		$response = Invoke-WebRequest -Uri $url -Method Head -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop | Out-Null
-		if ($response.StatusCode -eq 200) {
-			return $true
-		}
-
-        if ($i -lt $MaxRetries) {
+        try {
+            $response = Invoke-WebRequest -Uri $Url -Method Head -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+            if ($response.StatusCode -eq 200) {
+                return $true
+            }
+        } catch {
+        }
+		if ($i -lt $MaxRetries) {
             Start-Sleep -Seconds $RetryDelaySeconds
         }
     }
