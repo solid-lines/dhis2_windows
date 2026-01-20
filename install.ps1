@@ -134,9 +134,7 @@ Unblock-File -Path ".\Prometheus\install_Prometheus.ps1"
 
 Write-Log "Init DHIS2 installation...." -Level INFO
 $root_location = Get-Location
-Write-Log "Root Lcoation: ${root_location}" -Level INFO
 $global:download_path = (Join-Path $root_location "downloads") + "\"
-Write-Log "Download Lcoation: ${download_path}" -Level INFO
 
 # Check used ports
 # 80, 443 -> nginx
@@ -198,7 +196,7 @@ try {
 	if ($prometheus_grafana_enabled -ieq "Y") {
 		& (Join-Path $root_location "Prometheus\install_Prometheus.ps1") -Config $config
 	}
-	Remove-Item -Path ".\downloads" -Recurse -Force | Out-Null
+	Remove-Item -Path ${downloads_path} -Recurse -Force | Out-Null
 	Write-Log "Installation finished successfully!" -Level INFO
 } catch {
 	Remove-Item -Path ${downloads_path} -Recurse -Force | Out-Null
