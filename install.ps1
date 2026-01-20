@@ -76,13 +76,26 @@ function Should-Run([string]$name) {
 
 # Check if URL exists
 function Check-UrlExists {
-    param ([string]$url)
-    try {
-        $response = Invoke-WebRequest -Uri $url -Method Head -UseBasicParsing -ErrorAction Stop
-        return $true
-    } catch {
-        return $false
+    param (
+        [string]$url,
+        [int]$MaxRetries = 3,       # Número de intentos máximos
+        [int]$RetryDelaySeconds = 5 # Segundos de espera entre intentos
+    )
+
+    for ($i = 1; $i -le $MaxRetries; $i++) {
+		
+		# TimeoutSec: Si el servidor tarda más de 10s en responder, cuenta como fallo
+		$response = Invoke-WebRequest -Uri $url -Method Head -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+		if ($response.StatusCode -eq 200) {
+			return $true
+		}
+
+        if ($i -lt $MaxRetries) {
+            Start-Sleep -Seconds $RetryDelaySeconds
+        }
     }
+
+    return $false
 }
 
 #######################
@@ -163,7 +176,7 @@ if (${proxy_hostname} -ne "localhost") {
 }
 
 try {
-	New-Item -Path ".\downloads" -ItemType Directory -Force
+	New-Item -Path ".\downloads" -ItemType Directory -Force | Out-Null
 	if (Should-Run "jdk") {
 		& (Join-Path $Root_Location "JDK\install_openJDK.ps1") -Config $config
 	}
@@ -182,10 +195,10 @@ try {
 	if ($prometheus_grafana_enabled -ieq "Y") {
 		& (Join-Path $Root_Location "Prometheus\install_Prometheus.ps1") -Config $config
 	}
-	Remove-Item -Path ".\downloads" -Recurse -Force
+	Remove-Item -Path ".\downloads" -Recurse -Force | Out-Null
 	Write-Log "Installation finished successfully!" -Level INFO
 } catch {
-	Remove-Item -Path ".\downloads" -Recurse -Force
+	Remove-Item -Path ".\downloads" -Recurse -Force | Out-Null
 	Write-Log "Installation fail: $($_.Exception.Message)" -Level ERROR 
 	Write-Log "Position: $($_.InvocationInfo.PositionMessage)" -Level ERROR
 	Write-Log "Stack: $($_.ScriptStackTrace)" -Level ERROR
