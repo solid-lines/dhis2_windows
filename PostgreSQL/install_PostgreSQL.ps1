@@ -18,7 +18,7 @@ $pg_cpus = [string]$postgresql.cpus
 $postgis_version = [string]$postgresql.postgis_version
 $dhis2_db_name = [string]$dhis2.db_name
 
-$pg_download_file = ".\downloads\postgresql_${pg_version}_installer.exe"
+$pg_download_file = "${downloads_path}\postgresql_${pg_version}_installer.exe"
 $pg_install_path = "C:\Program Files\PostgreSQL\${pg_version}"
 
 #######################
@@ -80,7 +80,7 @@ function Get-PostgreSQL-Versions {
 	
 	# Save postgresql versions and links to a json file
 	$jsonOutput = $data | ConvertTo-Json -Depth 10 -Compress
-	$jsonFilePath = ".\downloads\postgresql_versions.json"
+	$jsonFilePath = "${downloads_path}\postgresql_versions.json"
 	Set-Content -Path $jsonFilePath -Value $jsonOutput
 	
 	return $data
@@ -88,7 +88,7 @@ function Get-PostgreSQL-Versions {
 
 # Get download link of a given postgresql version
 function Get-PostgreSQL-DownloadLink {
-	$jsonFilePath = ".\downloads\postgresql_versions.json"
+	$jsonFilePath = "${downloads_path}\postgresql_versions.json"
 	$jsonContent = Get-Content -Path $jsonFilePath -Raw | ConvertFrom-Json
 	$filteredLink = $jsonContent | Where-Object { $_.version -like "${pg_version}*" } | Select-Object -ExpandProperty download_link
    
@@ -103,7 +103,7 @@ function Get-PostgreSQL-DownloadLink {
 function Install-PostgreSQL {
 	$data = Get-PostgreSQL-Versions
 	$downloadLink = Get-PostgreSQL-DownloadLink
-	$pgDownloadFile = ".\downloads\postgresql_${pg_version}_installer.exe"
+	$pgDownloadFile = "${downloads_path}\postgresql_${pg_version}_installer.exe"
 	Write-Log "Downloading PostgreSQL v${pg_version}..." -Level INFO
 
 	Invoke-WebRequest -Uri ${downloadLink} -OutFile ${pgDownloadFile} -UseBasicParsing -ErrorAction Stop
@@ -119,7 +119,7 @@ function Install-Postgis {
 	
     $base = "https://ftp.osuosl.org/pub/osgeo/download/postgis/windows/pg${pg_version}"
     $file = "postgis-bundle-pg${pg_version}x64-setup-${postgis_version}-1.exe"
-    $postgisFile = ".\downloads\pg_${pg_version}_postgis.exe"
+    $postgisFile = "${downloads_path}\pg_${pg_version}_postgis.exe"
 
     $urls = @(
         "$base/$file",

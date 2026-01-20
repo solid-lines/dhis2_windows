@@ -20,7 +20,7 @@ $letsencrypt_dir = "C:\Certbot"
 function Download-Install-Nginx {
 	Write-Log "Downloading and installing Nginx v${proxy_version}..." -Level INFO
 	$nginxURL = "https://nginx.org/download/nginx-${proxy_version}.zip"
-	$nginxZip = ".\nginx.zip"
+	$nginxZip = "${downloads_path}\nginx.zip"
 	Invoke-WebRequest -Uri $nginxURL -OutFile $nginxZip -UseBasicParsing -ErrorAction Stop
 	
 	# Remove the previous nginx folder and extract the installation zip file
@@ -28,7 +28,6 @@ function Download-Install-Nginx {
 		Remove-Item -Path ${nginx_install_path} -Recurse -Force
 	}
 	Expand-Archive -Path $nginxZip -DestinationPath ${nginx_install_path} -Force | Out-Null
-	#Remove-Item -Path $nginxZip -Recurse -Force
 }
 
 # Preconfigure Nginx creating performance.conf, gzip.conf, security.conf, stub-status.conf, proxycommon.conf, proxysecurity.conf and nginx.conf configuration files
@@ -181,7 +180,7 @@ http {
 function Create-Nginx-Service {
 	# Install nssm
 	$nssm_url = "https://nssm.cc/release/nssm-2.24.zip"
-	$nssm_file = ".\nssm.zip"
+	$nssm_file = "${downloads_path}\nssm.zip"
 	Invoke-WebRequest -Uri ${nssm_url} -OutFile ${nssm_file} -UseBasicParsing -ErrorAction Stop
 	Expand-Archive -Path ${nssm_file} -DestinationPath "C:\Program Files\" -Force | Out-Null
 	Remove-Item -Path ${nssm_file} -Recurse -Force
@@ -201,7 +200,7 @@ function Install-Certbot {
 	}
 	
 	$certbot_url = "https://github.com/certbot/certbot/releases/download/v2.9.0/certbot-beta-installer-win_amd64_signed.exe"
-	$certbot_installer = ".\certbot-installer.exe"
+	$certbot_installer = "${downloads_path}\certbot-installer.exe"
 	Invoke-WebRequest -Uri $certbot_url -OutFile $certbot_installer -UseBasicParsing -ErrorAction Stop
 	Start-Process -FilePath $certbot_installer -ArgumentList "/S" -Wait
 	Move-Item -Path "C:\Program Files\Certbot\*" -Destination ${letsencrypt_dir} -Force | Out-Null

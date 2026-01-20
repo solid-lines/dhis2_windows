@@ -23,13 +23,13 @@ $glowroot_password = [string]$glowroot.password
 $tomcat_base_version = $tomcat_version.Split(".")[0]
 $tomcat_base_url = "https://dlcdn.apache.org/tomcat/tomcat-${tomcat_base_version}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip"
 $tomcat_archive_url = "https://archive.apache.org/dist/tomcat/tomcat-${tomcat_base_version}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}-windows-x64.zip"
-$tomcat_download_file = ".\downloads\${tomcat_path}.zip"
+$tomcat_download_file = "${downloads_path}\${tomcat_path}.zip"
 $tomcat_base_dir = "C:\Program Files\Tomcat"
 $tomcat_install_path = "C:\Program Files\Tomcat\${tomcat_path}"
 $glowroot_url = "https://github.com/glowroot/glowroot/releases/download/v${glowroot_version}/glowroot-${glowroot_version}-dist.zip"
-$glowroot_download_file = ".\downloads\glowroot-${glowroot_version}.zip"
+$glowroot_download_file = "${downloads_path}\glowroot-${glowroot_version}.zip"
 $glowroot_central_url = "https://github.com/glowroot/glowroot/releases/download/v${glowroot_version}/glowroot-central-${glowroot_version}-dist.zip"
-$glowroot_central_download_file = ".\downloads\glowroot-central-${glowroot_version}.zip"
+$glowroot_central_download_file = "${downloads_path}\glowroot-central-${glowroot_version}.zip"
 
 #######################
 # Functions

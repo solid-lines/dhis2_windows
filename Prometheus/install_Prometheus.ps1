@@ -2,7 +2,8 @@
 # Params
 #######################
 param(
-  [Parameter(Mandatory)] $Config
+  [Parameter(Mandatory)] $Config,
+  [Parameter(Mandatory)] $Root_Location
 )
 $prometheus_grafana = $Config.monitoring.prometheus_grafana
 $postgresql = $Config.postgresql
@@ -176,7 +177,7 @@ function Install-Prometheus {
 	Write-Log "Installing Prometheus v${prometheus_version}" -Level INFO
 	Write-Log "*** Please, remember to modify credentials to access DHIS2 in prometheus.yml config file" -Level INFO
 	$prometheusUrl = "https://github.com/prometheus/prometheus/releases/download/v${prometheus_version}/prometheus-${prometheus_version}.windows-amd64.zip"
-	$prometheusZip = "prometheus.zip"
+	$prometheusZip = "${downloads_path}\prometheus.zip"
 	$prometheusInstallPath = "${prometheus_base_install_path}\Prometheus"
 	$prometheusServiceName = "Prometheus"
 
@@ -241,7 +242,7 @@ function Install-Grafana {
 	$grafanaUrl = "https://dl.grafana.com/enterprise/release/grafana-enterprise-${grafana_version}.windows-amd64.zip"
 	$grafana_base_path = "C:\Program Files"
 	$grafanaInstallPath = "C:\Program Files\Grafana"
-	$grafanaZip = "grafana.zip"
+	$grafanaZip = "${downloads_path}\grafana.zip"
 	$grafanaServiceName = "Grafana"
 
 	#if (!(Test-Path $grafanaInstallPath)) {

@@ -2,7 +2,8 @@
 # Params
 #######################
 param(
-  [Parameter(Mandatory)] $Config
+  [Parameter(Mandatory)] $Config,
+  [Parameter(Mandatory)] $Root_Location
 )
 $postgresql = $Config.postgresql
 $dhis2 = $Config.dhis2
@@ -26,7 +27,7 @@ $tomcat_service_name = [string]$tomcat.service_name
 $proxy_hostname = [string]$proxy.hostname
 
 $tomcat_install_path = "C:\Program Files\Tomcat\${tomcat_path}"
-$war_file = ".\${dhis2_path}.war"
+$war_file = "${downloads_path}\${dhis2_path}.war"
 
 #######################
 # Functions
