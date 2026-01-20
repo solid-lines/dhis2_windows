@@ -143,9 +143,9 @@ foreach ($port in $requiredPorts) {
 	}
 }
 if ($portsused.Count -gt 0) {
-        Write-Log "Ports in use. Review services and configuration." -Level ERROR 
-        $portsused | ForEach-Object { Write-Log "  - $_" -Level ERROR }
-        Exit 1
+	Write-Log "Ports in use. Review services and configuration." -Level ERROR 
+	$portsused | ForEach-Object { Write-Log "  - $_" -Level ERROR }
+	Exit 1
 }
 
 # Check nssm URLs (Sometimes is not available)
@@ -164,29 +164,31 @@ if (${proxy_hostname} -ne "localhost") {
 }
 
 try {
-  if (Should-Run "jdk") {
-    & (Join-Path $Root_Location "JDK\install_openJDK.ps1") -Config $config
-  }
-  if (Should-Run "postgresql") {
-    & (Join-Path $Root_Location "PostgreSQL\install_PostgreSQL.ps1") -Config $config
-  }
-  if (Should-Run "tomcat") {
-    & (Join-Path $Root_Location "Tomcat\install_Tomcat.ps1") -Config $config
-  }
-  if (Should-Run "dhis2") {
-    & (Join-Path $Root_Location "DHIS2\install_DHIS2.ps1") -Config $config
-  }
-  if (Should-Run "nginx") {
-    & (Join-Path $Root_Location "Nginx\install_Nginx.ps1") -Config $config
-  }
-  if ($prometheus_grafana_enabled -ieq "Y") {
-	& (Join-Path $Root_Location "Prometheus\install_Prometheus.ps1") -Config $config
-  }
-
-  Write-Log "Installation finished successfully!" -Level INFO
+	New-Item -Path ".\downloads" -Name "e" -ItemType Directory
+	if (Should-Run "jdk") {
+		& (Join-Path $Root_Location "JDK\install_openJDK.ps1") -Config $config
+	}
+	if (Should-Run "postgresql") {
+		& (Join-Path $Root_Location "PostgreSQL\install_PostgreSQL.ps1") -Config $config
+	}
+		if (Should-Run "tomcat") {
+	& (Join-Path $Root_Location "Tomcat\install_Tomcat.ps1") -Config $config
+	}
+	if (Should-Run "dhis2") {
+		& (Join-Path $Root_Location "DHIS2\install_DHIS2.ps1") -Config $config
+	}
+	if (Should-Run "nginx") {
+		& (Join-Path $Root_Location "Nginx\install_Nginx.ps1") -Config $config
+	}
+	if ($prometheus_grafana_enabled -ieq "Y") {
+		& (Join-Path $Root_Location "Prometheus\install_Prometheus.ps1") -Config $config
+	}
+	Remove-Item -Path ".\downloads" -Recurse -Force
+	Write-Log "Installation finished successfully!" -Level INFO
 } catch {
-  Write-Log "Installation fail: $($_.Exception.Message)" -Level ERROR 
-  Write-Log "Position: $($_.InvocationInfo.PositionMessage)" -Level ERROR
-  Write-Log "Stack: $($_.ScriptStackTrace)" -Level ERROR
-  Exit 1
+	Remove-Item -Path ".\downloads" -Recurse -Force
+	Write-Log "Installation fail: $($_.Exception.Message)" -Level ERROR 
+	Write-Log "Position: $($_.InvocationInfo.PositionMessage)" -Level ERROR
+	Write-Log "Stack: $($_.ScriptStackTrace)" -Level ERROR
+	Exit 1
 }
