@@ -19,7 +19,7 @@
 	"service_name": "Tomcat10",
 	"port": "8080",
 	"xmx": "4096",
-	"xms": "2048",
+	"xms": "4096",
 	"username": "admin",
 	"password": "changeme"
   },

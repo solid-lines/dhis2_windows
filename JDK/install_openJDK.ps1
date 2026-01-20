@@ -50,7 +50,7 @@ if (-not (Is-JdkInstalled)) {
 
     # Download OpenJDK Package
     $download_url = $latest_jdk.binaries.package.link
-    $downloaded_file = ".\downloads\OpenJDK-${jdk_version}.zip"
+    $downloaded_file = "${downloads_path}\OpenJDK-${jdk_version}.zip"
     Write-Log "Download OpenJDK package from: ${download_url}" -Level INFO
     Invoke-WebRequest -Uri $download_url -OutFile $downloaded_file -UseBasicParsing -ErrorAction Stop
 

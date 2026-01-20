@@ -19,7 +19,7 @@
 	"service_name": "Tomcat10",					// Apache Tomcat service name
 	"port": "8080",								// Apache Tomcat connector port
 	"xmx": "4096",								// Apache Tomcat max memory size (MB)
-	"xms": "2048",								// Apache Tomcat initial memory size (MB)
+	"xms": "4096",								// Apache Tomcat initial memory size (MB)
 	"username": "admin",						// Apache Tomcat manager username
 	"password": "changeme"						// Apache Tomcat manager password. Should be changed!!
   },			
