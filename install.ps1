@@ -164,7 +164,7 @@ if (${proxy_hostname} -ne "localhost") {
 }
 
 try {
-	New-Item -Path ".\downloads" -Name "e" -ItemType Directory
+	New-Item -Path ".\downloads" -ItemType Directory -Force
 	if (Should-Run "jdk") {
 		& (Join-Path $Root_Location "JDK\install_openJDK.ps1") -Config $config
 	}
