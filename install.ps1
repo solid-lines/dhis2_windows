@@ -4,7 +4,7 @@
 
 function Init-Logs {
 	param(
-        [string]$Root_Location
+        [string]$LogPath
     )
 	
 	# Log Levels
@@ -24,7 +24,7 @@ function Init-Logs {
 	}
 
 	# Create logs path
-	$global:LogPath = if ($config.logging.path) { "${Root_Location}/$config.logging.path" } else { ".\logs" }
+	$global:LogPath = $LogPath
 	$global:LogFile = "$LogPath\install_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
 	New-Item -Path $LogPath -ItemType Directory -Force | Out-Null
 }
@@ -107,8 +107,7 @@ try {
     Exit 1
 }
 
-$Root_Location = Get-Location
-Init-Logs $Root_Location
+Init-Logs $config.logging.path
 
 Write-Log "Set Execution Policies and Unblock powershell scripts" -Level DEBUG
 Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned
